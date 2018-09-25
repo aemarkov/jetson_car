@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-namespace RCWin32
+namespace RCWin32.Joystick
 {
     /// <summary>
     /// Read joystick without DirectX

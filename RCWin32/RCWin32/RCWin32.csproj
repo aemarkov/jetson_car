@@ -51,15 +51,24 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Joystick.cs" />
-    <Compile Include="JoystickDrawer.cs">
+    <Compile Include="Joystick\Joystick.cs" />
+    <Compile Include="Joystick\JoystickDrawer.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="KeyboardJoystick.cs" />
+    <Compile Include="Joystick\JoystickControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Joystick\JoystickControl.Designer.cs">
+      <DependentUpon>JoystickControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Joystick\KeyboardJoystick.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Joystick\JoystickControl.resx">
+      <DependentUpon>JoystickControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

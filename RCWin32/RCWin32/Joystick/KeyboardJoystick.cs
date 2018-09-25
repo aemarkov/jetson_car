@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RCWin32
+namespace RCWin32.Joystick
 {
     /// <summary>
     /// Emulate joystick with keyboard (WSAD)
