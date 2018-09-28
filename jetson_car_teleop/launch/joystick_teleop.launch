@@ -1,0 +1,7 @@
+<launch>
+	<arg name="dev" default="/dev/input/js0"/>
+	<node name="joystick" pkg="joy" type="joy_node">
+		<param name="dev" value="$(arg dev)"/>
+	</node>
+	<node name="stream_viewer" pkg="jetson_car_teleop" type="view_stream.sh"/>
+</launch>
