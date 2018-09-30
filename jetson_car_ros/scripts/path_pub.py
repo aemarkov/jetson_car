@@ -27,14 +27,18 @@ if __name__ == '__main__':
 	x = 0
 	y = 0
 
-	for _ in range(15):		
-		x+=0.1
-		path.poses.append(get_pose(x,y))
+	#for _ in range(15):		
+	#	x+=0.1
+	#	path.poses.append(get_pose(x,y))
 
-	for _ in range(15):
-		pose = PoseStamped()
-		y+=0.1
-		path.poses.append(get_pose(x,y))
+	#for _ in range(15):
+	#	pose = PoseStamped()
+	#	y+=0.1
+	#	path.poses.append(get_pose(x,y))
+
+	path.poses.append(get_pose(0,0))
+	path.poses.append(get_pose(1,0))
+	path.poses.append(get_pose(1,1))
 
 	pub.publish(path)
 	rospy.spin()

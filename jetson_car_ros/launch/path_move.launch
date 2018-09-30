@@ -1,0 +1,8 @@
+<launch>
+    <arg name="max_pwm" default="25"/>        
+    <param name="max_pwm" value="$(arg max_pwm)"/>
+    <node name="motors_driver" pkg="jetson_car" type="motors_driver" output="screen"/>    
+    <node name="joy_to_motors" pkg="jetson_car" type="joy_to_motors.py" output="screen"/>
+    <node name="path_publisher" pkg="jetson_car" type="path_pub.py"/>
+    <include file="$(find zed_wrapper)/launch/zed.launch"/>
+</launch>
