@@ -1,9 +1,9 @@
 <launch>
 	<arg name="max_pwm" default="25"/>
-	<arg name="control_pc"/>
-	<node name="motors_driver" pkg="jetson_car" type="motors_driver" output="screen"/>
-	<node name="joy_to_motors" pkg="jetson_car" type="joy_to_motors.py" output="screen">
-		<param name="max_pwm" value="$(arg max_pwm)"/>
-	</node>
-	<node name="camera_streamer" pkg="jetson_car" type="stream_camera.sh" args="-i $(arg control_pc)"/>
+    <arg name="is_stream" default="false"/>
+	<arg name="control_pc"/>    
+    <param name="max_pwm" value="$(arg max_pwm)"/>
+	<node name="motors_driver" pkg="jetson_car" type="motors_driver" output="screen"/>    
+	<node name="joy_to_motors" pkg="jetson_car" type="joy_to_motors.py" output="screen"/>    
+	<node name="camera_streamer" pkg="jetson_car" type="stream_camera.sh" args="-i $(arg control_pc)" if="$(eval is_stream == true)"/>
 </launch>
