@@ -152,6 +152,9 @@ def find_closest_intersect(pos, orientation, intersects):
     return  min(map(lambda x: (x, vector_angle(x - pos) - orientation), intersects), key=lambda x: abs(x[1]))
 
 
+def is_close_to_point(pos, point, radius):
+    return np.linalg.norm(point - pos) <= radius
+
 def send_command(forward, rot):
     joy = Joy()
     joy.axes = [0, forward, rot]
@@ -172,8 +175,9 @@ def array_to_point(p):
 
 
 path = None
-radius = 0.7    # Радиус просмотра вперед
-k = 1           # Коэффциент управления
+radius = 0.3        # Радиус просмотра вперед
+stop_radius = 0.3   # Радиус детектирования конечной точки
+k = 1               # Коэффциент управления
 
 # получение требуемой траектории
 def path_callback(msg):
@@ -190,10 +194,20 @@ def odom_callback(msg):
     position = point_to_array(msg.pose.pose.position)
     orientation =  euler_from_quaternion(quaterion_to_array(msg.pose.pose.orientation))[2]    
         
+    if is_close_to_point(position, point_to_array(path.poses[-1].pose.position), stop_radius):
+        send_command(0, 0)
+        return
+
     # определение ближайшего пересечения траектории с окружностью
+    intersects = find_path_intersections(path, position, radius, 0.01)
+    if len(intersects) == 0:
+        rospy.logwarn('Too far from trajectory')
+        send_command(0, 0)
+        return
+
     int_pos, bearing = find_closest_intersect(position,
                                               orientation, 
-                                              find_path_intersections(path, position, radius, 0.01))
+                                              intersects)
 
     rospy.loginfo(bearing)
         
@@ -203,7 +217,7 @@ def odom_callback(msg):
     if abs(rot) > 1:
         rot = math.copysign(1, rot)
 
-    send_command(0.5, rot)
+    send_command(0.7, rot)
 
     # отрисовка курса на пересечение для отладки
     intersect_marker.points = []    

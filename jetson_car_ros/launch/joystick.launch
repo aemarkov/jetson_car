@@ -1,6 +1,6 @@
 <launch>
 	<arg name="max_pwm" default="25"/>
-    <arg name="is_stream" default="false"/>
+    <arg name="is_stream" default="true"/>
 	<arg name="control_pc"/>    
     <param name="max_pwm" value="$(arg max_pwm)"/>
 	<node name="motors_driver" pkg="jetson_car" type="motors_driver" output="screen"/>    

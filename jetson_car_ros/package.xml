@@ -53,6 +53,12 @@
   <exec_depend>roscpp</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>message_runtime</exec_depend>
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>gstreamer1.0</exec_depend>  
+  <exec_depend>gstreamer1.0-plugins-base</exec_depend>
+  <exec_depend>gstreamer1.0-plugins-good</exec_depend>
+  <exec_depend>gstreamer1.0-plugins-bad</exec_depend>  
+  <exec_depend>gstreamer1.0-tools</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

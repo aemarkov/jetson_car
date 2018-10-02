@@ -36,9 +36,19 @@ if __name__ == '__main__':
 	#	y+=0.1
 	#	path.poses.append(get_pose(x,y))
 
-	path.poses.append(get_pose(0,0))
-	path.poses.append(get_pose(1,0))
-	path.poses.append(get_pose(1,1))
+	#path.poses.append(get_pose(0,0))
+	#path.poses.append(get_pose(1.3,0))
+	#path.poses.append(get_pose(1.3,-1.1))
+	#path.poses.append(get_pose(4.5,-1.1))
+	#path.poses.append(get_pose(4.5,-3))
+	#path.poses.append(get_pose(3.5,-3))
+
+	path.poses.append(get_pose(0, 0))
+	path.poses.append(get_pose(1, 0))
+	path.poses.append(get_pose(1, -1))
+	path.poses.append(get_pose(2, -1))
+	path.poses.append(get_pose(1.5, 0))
+	path.poses.append(get_pose(1.5, 1))
 
 	pub.publish(path)
 	rospy.spin()
