@@ -24,12 +24,7 @@ def joy_cmd_callback(msg):
 
 if __name__ == '__main__':
 	rospy.init_node('joy_to_motors')
-
-	if not rospy.has_param('max_pwm'):
-		rospy.logfatal('Parameter max_pwm not set')
-		exit(1)
-
-
+	
 	MAX_PWM = rospy.get_param('max_pwm', 25)
 	
 	rospy.loginfo("MAX_PWM:   %d", MAX_PWM)
