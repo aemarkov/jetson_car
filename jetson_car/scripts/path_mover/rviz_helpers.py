@@ -12,7 +12,7 @@ class RvizHelpers:
         self.intersect_pub = rospy.Publisher(intersect_topic, Marker, queue_size = 1)   
         
         self.circle_marker = self.__init_marker(Marker.LINE_STRIP, (0, 0, 1, 1))
-        self.intersect_marker = self.__init_marker(Marker.LINE_LIST, (0, 1, 1, 1))
+        self.intersect_marker = self.__init_marker(Marker.LINE_LIST, (1, 1, 0, 1))
         
 
     def __init_marker(self, marker_type, rgba):
@@ -24,7 +24,7 @@ class RvizHelpers:
         marker.scale.z = 0.01
         marker.color.r = rgba[0]
         marker.color.g = rgba[1]
-        marker.color.a = rgba[2]
+        marker.color.b = rgba[2]
         marker.color.a = rgba[3]
         return marker
 

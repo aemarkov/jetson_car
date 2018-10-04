@@ -5,7 +5,9 @@ add_compile_options(-std=c++11)
 
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
+  nav_msgs
   roscpp
+  rospy
   std_msgs
   message_generation
 )
