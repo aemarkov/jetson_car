@@ -26,9 +26,8 @@ catkin_package(
 
 include_directories(${catkin_INCLUDE_DIRS})
 
-add_executable(motors_driver src/motors_driver.cpp)
-target_link_libraries(motors_driver
-   ${catkin_LIBRARIES}
-)
+add_executable(motors_driver_node src/motors_driver_node.cpp)
+target_link_libraries(motors_driver_node ${catkin_LIBRARIES})
 
-
+add_executable(odometry_logger_node src/odometry_logger_node.cpp)
+target_link_libraries(odometry_logger_node ${catkin_LIBRARIES})

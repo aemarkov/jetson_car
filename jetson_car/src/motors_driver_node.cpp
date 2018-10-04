@@ -24,7 +24,7 @@ void callback(const jetson_car::MotorsControl msg)
 
 int main(int argc, char** argv)
 {
-	ros::init(argc, argv, "motors_druver");
+	ros::init(argc, argv, "motors_driver");
 	ros::NodeHandle nh;
 	ROS_INFO("Motors driver started");
 
