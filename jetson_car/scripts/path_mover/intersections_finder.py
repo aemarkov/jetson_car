@@ -44,28 +44,45 @@ def __find_intersection(p1, p2, O, r, eps):
     # координаты ближайшей к центру точки на прямой (точка C)
     x = (b*(b*x0 - a*y0) - a*c)/(a*a + b*b)
     y = (a*(-b*x0 + a*y0) - b*c)/(a*a + b*b)
-       
+
+    if abs(d-r) < eps:
+        # Одно пересечение
+        A = [x, y]
+        if __check_bounds(A, p1, p2):
+            return A
+        else:
+            return None
+    
     if d > r:
         # Пересечений нет
         return None
-
-    # Одно или два пересечения, но нам не важно,
-    # Возьмем просто найденную ближайшую точку прямой
-    A = [x, y]
+    
+    # иначе 2 пересечение
+    
+    # Расстояние от точки D до точек пересечения (A, B)
+    # (одинаково в обе стороны)
+    l = math.sqrt(r*r - d*d)
+    
+    # Отложим расстояние l от точки C вдоль  нормированного направляющего вектора
+    # прямой p(px, py). Считаем, что точка p2 лежит дальше по траектории, чем
+    # точка p1:
+    p = __norm([px, py])
+    C = [x, y]    
+    A = C + l*p
     if __check_bounds(A, p1, p2):
-        return A
-    else:
-        return None
+        return A  
+
+    return None
 
 # Нахождение точек пересечения между окружностью и ломаной, заданной
 # последовательностью точек
-# path   - траектория (ломаная)
-# O      - центр окружности
-# r      - радиус окружности
-# eps    - точность проверки 
-# start  - с какого индекса надо начинать искать
-# length - какое количество точек искать, начиная со start
-def find_path_intersection(path, O, r, eps, start, length):        
+# path       - траектория (ломаная)
+# O          - центр окружности
+# r          - радиус окружности
+# eps        - точность проверки 
+# start      - с какого индекса надо начинать искать (в обе стороны)
+# length     - какое количество точек искать, начиная со start
+def find(path, O, r, eps, start, length):        
     #intersetcs = []
     #poses=path.poses[start:length]
     #print(start, length, len(poses))
@@ -79,42 +96,17 @@ def find_path_intersection(path, O, r, eps, start, length):
     
     #return intersetcs
 
-    i = start
+    i = max(start - length/2, 0)
     intersect = None
     intersect_index = 0
-    print(start, length)
-    while ((i < start + length - 1) or (intersect == None)) and (i < len(path.poses)-1):
+    while ((i < start + length/2) or (intersect is None)) and (i < len(path.poses)-1):
         intersect_ = __find_intersection(msg_helpers.point_to_array(path.poses[i].pose.position),
                                            msg_helpers.point_to_array(path.poses[i+1].pose.position),
                                            O, r, eps)
-        #print(i, intersect)
-        if intersect_ != None:
+        if intersect_ is not None:
             intersect_index = i
-            intersect = intersect_ 
+            intersect = intersect_
 
         i+=1
 
     return (intersect_index, intersect)
-
-def __rot_matrix(angle):
-    c = np.cos(angle)
-    s = np.sin(angle)
-    return np.array([[c, -s],
-                     [s,  c]])
-
-def __rot_vector(vec, angle):
-    return np.matmul(__rot_matrix(angle), vec)
-
-def __vec_of_angle(angle):
-    return __rot_vector(np.array([1,0]), angle)
-
-# находит пересечение, угол на который меньше всего отличатеся от текущего курса
-def find_closest_intersect(pos, orientation, intersects):  
-    
-    # Берем пересечение с самым большим
-    intersect = max(intersects, key=lambda x: x[0])
-    vec_to_intersect =  intersect[1] - pos
-    orientation_vec = __vec_of_angle(orientation)
-    bearing = math.atan2(np.cross(orientation_vec, vec_to_intersect), np.dot(vec_to_intersect, orientation_vec))
-    return (intersect[0], intersect[1], bearing)
-    #return  max(map(lambda x: (x[1], __vector_angle(x[1] - pos) - orientation, x[0]), intersects), key=lambda x: x[2])

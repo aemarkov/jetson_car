@@ -15,16 +15,32 @@ from rviz_helpers import RvizHelpers
 
 ###############################################################################
 
-path = None
 radius = 0.5             # Радиус просмотра вперед
-stop_radius = 0.2        # Радиус детектирования конечной точки
-k = 1                    # Коэффциент управления
+stop_cnt = 5             # Количество оставшихся точек до конца траектории, при которых можно остановится
 points_lookup_count = 10 # В каком диапазоне нужно искать следующие точки (от последней)
+k = 1                    # Коэффциент управления
 
+path = None
 ###############################################################################
 
-def is_close_to_point(pos, point, radius):
-    return np.linalg.norm(point - pos) <= radius
+def __rot_matrix(angle):
+    c = np.cos(angle)
+    s = np.sin(angle)
+    return np.array([[c, -s],
+                     [s,  c]])
+
+def __rot_vector(vec, angle):
+    return np.matmul(__rot_matrix(angle), vec)
+
+def __vec_of_angle(angle):
+    return __rot_vector(np.array([1,0]), angle)
+
+# Вычисляет угол отклонения между текущим курсом и пересечением
+def calc_bearing(pos, orientation, intersect):  
+    vec_to_intersect =  intersect - pos
+    orientation_vec = __vec_of_angle(orientation)
+    bearing = math.atan2(np.cross(orientation_vec, vec_to_intersect), np.dot(vec_to_intersect, orientation_vec))
+    return bearing
 
 def send_command(forward, rot):
     joy = Joy()
@@ -51,34 +67,38 @@ def odom_callback(msg):
     orientation =  euler_from_quaternion(msg_helpers.quaterion_to_array(msg.pose.pose.orientation))[2]
 
     # определение ближайшего пересечения траектории с окружностью
-    intersection = intersections_finder.find_path_intersection(path,position, radius, 0.01, 
-                                                              last_path_point_index, points_lookup_count)
+    index, intersection = intersections_finder.find(path,position, radius, 0.01, 
+                                                    last_path_point_index, 
+                                                    points_lookup_count)
 
-    print('>>>', intersection)
+    last_path_point_index = index
+
+    print('>>>', last_path_point_index, intersection)
+
+    if len(path.poses) - last_path_point_index <= stop_cnt:
+        send_command(0,0)
+        return
+
     # отрисова окружности поиска для оладки
     rviz.circle(position, radius)
 
-    # Отрисовка пересечений
-    if intersection[1] != None:
-        rviz.intersection(position, intersection[1])
+    if intersection is None:
+        rospy.logwarn('Too far from trajectory')
+        send_command(0, 0)
+        return
     
-    return
+    # Отрисовка пересечений
+    rviz.intersection(position, intersection)
 
-    #if len(intersects) == 0:
-    #    rospy.logwarn('Too far from trajectory')
-    #    send_command(0, 0)
-    #    return
-
-    #last_path_point_index, int_pos, bearing = intersections_finder.find_closest_intersect(position,orientation,  intersects)
-        
     # управленияе взависимости от угла отклонения текущего
     # курса от курса на пересечение
-    #rot = k * bearing
+    bearing = calc_bearing(position, orientation, intersection)
+    rot = k * bearing
     #print(math.degrees(bearing), rot)
-    #if abs(rot) > 1:
-    #    rot = math.copysign(1, rot)
+    if abs(rot) > 1:
+        rot = math.copysign(1, rot)
 
-    #send_command(1, rot)
+    send_command(1, rot)
 
 
 #########################################################
