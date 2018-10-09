@@ -34,7 +34,7 @@ if __name__ == '__main__':
 	with open(path_file, 'r') as f:
 		f.readline() # skip header
 		for line in f:
-			x, y = line.split('\t')
+			x, y = line.strip().split()
 			path.poses.append(get_pose(float(x),float(y)))
 
 	pub.publish(path)
