@@ -43,9 +43,10 @@ class RvizHelpers:
         self.circle_pub.publish(self.circle_marker)
 
     # отрисовка курса на пересечение для отладки
-    def intersection(self, position, intersect_point):
-        self.intersect_marker.points = []    
+    def intersection(self, position, intersection):
+        self.intersect_marker.points = []
+        #for intersection in intersections:
         self.intersect_marker.points.append(msg_helpers.array_to_point(position))
-        self.intersect_marker.points.append(msg_helpers.array_to_point(intersect_point))    
+        self.intersect_marker.points.append(msg_helpers.array_to_point(intersection))    
         self.intersect_pub.publish(self.intersect_marker)
 
