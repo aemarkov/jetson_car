@@ -17,8 +17,8 @@
 
     <include file="$(find jetson_car)/launch/include/_logger.launch">
     	<arg name="is_publish_path" value="$(arg is_publish_path)"/>
-    	<arg name="is_log_path" value="$(arg is_log_path)"/>    
-    	<arg name="logs_directory" value="$(arg logs_directory"/>	
+    	<arg name="is_log_path" value="$(arg is_log_path)"/>
+    	<arg name="logs_directory" value="$(arg logs_directory)"/>	
     </include>    
 
 	<node name="path_publisher" pkg="jetson_car" type="path_drawer_node.py" output="screen" if="$(eval draw and path_file=='')"/>	
