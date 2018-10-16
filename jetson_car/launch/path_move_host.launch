@@ -1,0 +1,26 @@
+<launch>
+	<!-- path publishing -->
+	<arg name="draw" default="False"/>
+	<arg name="path_file" default=""/>
+	<arg name="path_directory" default="$(find jetson_car)/path_logs"/>
+	<!-- logging -->
+	<arg name="is_publish_path" default="false"/>
+	<arg name="is_log_path" default="false"/>
+	<arg name="logs_directory" default="$(find jetson_car)/logs"/>
+
+    <param name="path_file" value="$(arg path_file)"/>	
+    <param name="path_directory" value="$(arg path_directory)"/>	
+
+    <include file="$(find jetson_car)/launch/include/_path_publisher.launch" if="$(eval not draw and path_file!='')">
+    	<arg name="path_file" value="$(arg path_file)"/>
+    </include>
+
+    <include file="$(find jetson_car)/launch/include/_logger.launch">
+    	<arg name="is_publish_path" value="$(arg is_publish_path)"/>
+    	<arg name="is_log_path" value="$(arg is_log_path)"/>    
+    	<arg name="logs_directory" value="$(arg logs_directory"/>	
+    </include>    
+
+	<node name="path_publisher" pkg="jetson_car" type="path_drawer_node.py" output="screen" if="$(eval draw and path_file=='')"/>	
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find jetson_car)/rviz/path.rviz" />
+</launch>
