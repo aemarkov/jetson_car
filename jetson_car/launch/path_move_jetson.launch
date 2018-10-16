@@ -1,0 +1,27 @@
+<launch>
+    <arg name="max_pwm" default="15"/>
+    <arg name="run_now" default="false"/>
+    <arg name="path_file" default=""/>
+    <!-- logging -->
+    <arg name="is_publish_path" default="false"/>
+    <arg name="is_log_path" default="false"/>
+    <arg name="logs_directory" default="$(find jetson_car)/logs"/>
+
+    <param name="max_pwm" value="$(arg max_pwm)"/>
+
+	<include file="$(find zed_wrapper)/launch/zed.launch"/>
+
+    <include file="$(find jetson_car)/launch/include/_path_publisher.launch" if="$(eval path_file!='')">
+    	<arg name="path_file" value="$(arg path_file)"/>
+    </include>
+
+    <include file="$(find jetson_car)/launch/include/_logger.launch">
+        <arg name="is_publish_path" value="$(arg is_publish_path)"/>
+        <arg name="is_log_path" value="$(arg is_log_path)"/>    
+        <arg name="logs_directory" value="$(arg logs_directory)"/>   
+    </include>    
+
+    <node name="motors_driver" pkg="jetson_car" type="motors_driver_node" output="screen"/>    
+    <node name="joy_to_motors" pkg="jetson_car" type="joy_to_motors_node.py" output="screen"/>    
+    <node name="path_mover" pkg="jetson_car" type="path_mover_node.py" if="$(arg run_now)" output="screen"/>    
+</launch>

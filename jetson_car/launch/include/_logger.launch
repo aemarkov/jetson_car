@@ -1,0 +1,10 @@
+<launch>
+	<arg name="is_publish_path" default="false"/>
+	<arg name="is_log_path" default="false"/>
+	<arg name="logs_directory" default="$(find jetson_car)/logs"/>
+
+	<param name="is_publish_path" value="$(arg is_publish_path)"/>
+    <param name="logs_directory" value="$(arg logs_directory)" if="$(arg is_log_path)"/>
+
+	<node name="odometry_logger" pkg="jetson_car" type="odometry_logger_node" output="screen"/>
+</launch>
