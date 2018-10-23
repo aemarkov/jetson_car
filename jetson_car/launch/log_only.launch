@@ -1,0 +1,9 @@
+<launch>    
+    <arg name="logs_directory" default="$(find jetson_car)/logs"/>
+    <include file="$(find zed_wrapper)/launch/zed.launch"/>
+    <include file="$(find jetson_car)/launch/include/_logger.launch">
+        <arg name="is_publish_path" value="false"/>
+        <arg name="is_log_path" value="true"/>
+        <arg name="logs_directory" value="$(arg logs_directory)"/>   
+    </include>    
+</launch>

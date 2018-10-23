@@ -15,7 +15,7 @@
         <arg name="path_file" value="$(arg path_file)"/>
     </include>
 
-    <include file="$(find jetson_car)/launch/include/_logger.launch">
+    <include file="$(find jetson_car)/launch/include/_logger.launch" if="$(eval is_publish_path or is_log_path)">
         <arg name="is_publish_path" value="$(arg is_publish_path)"/>
         <arg name="is_log_path" value="$(arg is_log_path)"/>    
         <arg name="logs_directory" value="$(arg logs_directory)"/>   
