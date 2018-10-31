@@ -22,8 +22,9 @@ bld/
 [Oo]bj/
 [Ll]og/
 
-# zed logs
+# Experiments logs
 logs/
+svo/
 
 # Visual Studio 2015 cache/options directory
 .vs/

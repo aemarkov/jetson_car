@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!-- 
+Convert GPS coordinate to the local (zed camera) frame
+Convert local odom from zed camera frame to the GPS coordinates
+
+Note: IMU yaw = 0 is EAST. Set yaw_offset otherwise
+-->
+
+<launch>    
+    <node pkg="tf" type="static_transform_publisher" name="zed_to_gps"  args="0 0 0 0 0 0 zed_camera_center android 100"/>
+
+    <!-- NavSat Transform -->
+    <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform" output="screen">
+        <param name="magnetic_declination_radians" value="0"/>
+        <param name="yaw_offset" value="1.5707963"/>
+        <param name="zero_altitude" value="false"/>
+        <param name="broadcast_utm_transform" value="true"/>
+        <param name="publish_filtered_gps" value="true"/>
+        <param name="use_odometry_yaw" value="false"/>
+
+        <remap from="imu/data" to="android/imu" />
+        <remap from="gps/fix" to="android/gps" />
+        <remap from="odometry/filtered" to="/zed/odom"/>
+        <remap from="gps/filtered" to="gps/odom"/>
+    </node>    
+</launch>

@@ -45,7 +45,7 @@ def create_interactive_marker():
 
 def get_filename():
     time = datetime.now()
-    filename = time.strftime("%Y.%m.%d_%H.%M.%S")+".txt"
+    filename = 'path_'+time.strftime("%Y.%m.%d_%H.%M.%S")+".txt"
     return filename
 
 def marker_cb(feedback):
@@ -56,7 +56,7 @@ def marker_cb(feedback):
     pub.publish(path)
 
     if path_file!=None:
-        path_file.write(str(p.x)+'\t'+str(p.y)+'\t'+str(p.z)+'\n')
+        path_file.write(str(p.x)+'\t'+str(p.y)+'\n')
 
 path_directory = None
 path_file = None
@@ -71,6 +71,7 @@ if __name__=="__main__":
         
         filename = os.path.join(path_directory, get_filename())
         path_file = open(filename, 'w')
+        path_file.write('X\tY\n')
         rospy.loginfo('Path is logged to: %s', filename)
 
 
