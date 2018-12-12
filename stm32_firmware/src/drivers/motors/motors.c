@@ -28,15 +28,15 @@ void Motors_Init(void)
                         R_MOTOR_PWM_PIN,
                         GPIO_Mode_AF_PP, GPIO_Speed_50MHz);
     
-    // Настройка таймера
+    // Настройка таймера ШИМ
     /*
         SYSCLOCK = 72 MHz
-        PWM - 50 Hz
-        Tpwm = 1/PWM = 20 ms
+        PWM - 100 Hz
+        Tpwm = 1/PWM = 10 ms
         
         F = 72 MHz / 72 = 1000 kHz
-        T = 1/F =  1 mks
-        Period = Tpwm / T = 20000
+        T = 1/F =  1 us
+        Period = Tpwm / T = 10000
         
         Pulse min = 1000 
         Pulse max = 2000
@@ -64,7 +64,7 @@ void Motors_Init(void)
     channelInit.TIM_Pulse = 0;
     TIM_OC1Init(TIM2, &channelInit);    
     TIM_OC1PreloadConfig(TIM2, TIM_OCPreload_Enable);
-    //GPIO_PinAFConfig(PWM_GPIO, L_MOTOR_PINSOURCE, GPIO_AF_1);    
+    //GPIO_PinAFConfig(PWM_GPIO, L_MOTOR_PINSOURCE, GPIO_AF_1);  ???
     
     // R motor
     channelInit.TIM_Pulse = 0;
@@ -74,9 +74,6 @@ void Motors_Init(void)
     
     TIM_Cmd(TIM2, ENABLE);
     TIM_CtrlPWMOutputs(TIM2, ENABLE);
-	
-	//TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);   
-    //NVIC_EnableIRQ(TIM2_IRQn);
 }
 
 // Управляет ключами H-моста левого мотора
@@ -93,7 +90,6 @@ void L_Motor_SetDirection(bool a, bool b)
 // Управляет ключами H-моста правого мотора
 void R_Motor_SetDirection(bool a, bool b)
 {
-    //printf("R Dir: %d %d\n", a, b);
     if(a) R_MOTOR_GPIO->ODR |= R_MOTOR_A_PIN;
     else R_MOTOR_GPIO->ODR &= ~R_MOTOR_A_PIN;
 
@@ -104,17 +100,13 @@ void R_Motor_SetDirection(bool a, bool b)
 // Устанавлвиает скважность PWM левого мотора
 void L_Motor_SetPWM(int8_t pwm)
 {
-    //printf("L PWM: %d\n", pwm);
     TIM2->CCR2 = pwm * MOTOR_MAX / 127;
-    //TIM2->CCR1 = 3000;
 }
 
 // Устанавлвиает скважность PWM левого мотора
 void R_Motor_SetPWM(int8_t pwm)
 {
-    //printf("R PWM: %d\n", pwm);
     TIM2->CCR1 = pwm * MOTOR_MAX / 127;
-    //TIM2->CCR2 = 3000;
 }
 
 void Motors_Control(int8_t left, int8_t right)
