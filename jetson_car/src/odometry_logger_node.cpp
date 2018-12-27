@@ -18,7 +18,10 @@ using namespace std;
 bool   is_log_path;                         // Логировать ли одометрию в файл
 bool   is_log_gps;                          // Логгировать ли GPS в файл
 bool   is_publish_path;                     // Публиковать ли траеткорию, построенную из положения
+
+bool   is_directory_set;                    // Параметр директории для логов указан
 string logs_directory;                      // Выходная папка
+
 const string pos_topic = "/zed/pose";       // Имя топика положения 
 const string path_topic = "/real_path";     // Имя топика траектории
 const string gps_topic  = "/odometry/gps";  // Имя топика с GPS в том же фрейме, что и path_topic
@@ -47,8 +50,14 @@ int main(int argc, char** argv)
     read_params(nh);
 
     ROS_INFO_STREAM("Path publishing:     " << (is_publish_path ? "enabled" : "disabled"));
-    ROS_INFO_STREAM("Log saving:          " << (is_log_path ? "enabled" : "disabled"));
-    ROS_INFO_STREAM("GPS saving:          " << (is_log_gps ? "enabled" : "disabled"));
+    ROS_INFO_STREAM("Odom logging:        " << (is_log_path ? "enabled" : "disabled"));
+    ROS_INFO_STREAM("GPS logging:         " << (is_log_gps ? "enabled" : "disabled"));
+
+    if((is_log_gps || is_log_path) && !is_directory_set)
+    {
+        ROS_ERROR_STREAM("GPS or odometry logging is enabled, but logs directory isn't set");
+        exit(-1);
+    }
 
     if(is_log_path)
     {
@@ -79,7 +88,7 @@ int main(int argc, char** argv)
     if(!is_log_path && !is_publish_path && !is_log_gps)
     {
         ROS_WARN("No publishing, no loggin. Why you run this node?");
-        exit(0);
+        exit(-1);
     }
 
 
@@ -103,7 +112,8 @@ void read_params(const ros::NodeHandle& nh)
 {       
     nh.param<bool>("is_publish_path", is_publish_path, false);
     nh.param<bool>("is_log_gps", is_log_gps, false);
-    is_log_path = nh.getParam("logs_directory", logs_directory);    
+    nh.param<bool>("is_log_path", is_log_path, false);
+    is_directory_set = nh.getParam("logs_directory", logs_directory);    
 }
 
 string get_filename(const string& directory, const string& suffix)

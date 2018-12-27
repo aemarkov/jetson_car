@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# This node publish example path
+# This node publish path from iFrund-compatible file
 
 import rospy
 from nav_msgs.msg import Path

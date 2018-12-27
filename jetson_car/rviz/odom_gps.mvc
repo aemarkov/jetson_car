@@ -1,0 +1,53 @@
+capture_directory: ~
+fixed_frame: far_field
+target_frame: <none>
+fix_orientation: false
+rotate_90: false
+enable_antialiasing: true
+show_displays: true
+show_status_bar: true
+show_capture_tools: true
+window_width: 1920
+window_height: 1010
+view_scale: 2.043831
+offset_x: -1.388739e+07
+offset_y: -2135125
+use_latest_transforms: true
+background: "#a0a0a4"
+displays:
+  - type: mapviz_plugins/tile_map
+    name: new display
+    config:
+      visible: true
+      collapsed: false
+      custom_sources:
+        - base_url: http://mt1.google.com/vt/lyrs=y&z={level}&x={x}&y={y}
+          max_zoom: 15
+          name: Google (hybrid)
+          type: wmts
+        - base_url: http://mt1.google.com/vt/lyrs=m&z={level}&x={x}&y={y}
+          max_zoom: 15
+          name: Google (roads)
+          type: wmts
+      bing_api_key: ""
+      source: Google (hybrid)
+  - type: mapviz_plugins/navsat
+    name: new display
+    config:
+      visible: true
+      collapsed: false
+      topic: /android/gps
+      color: "#ff0000"
+      draw_style: points
+      position_tolerance: 0
+      buffer_size: 0
+  - type: mapviz_plugins/navsat
+    name: new display
+    config:
+      visible: true
+      collapsed: false
+      topic: /gps/odom
+      color: "#ffaa00"
+      draw_style: points
+      position_tolerance: 0
+      buffer_size: 0

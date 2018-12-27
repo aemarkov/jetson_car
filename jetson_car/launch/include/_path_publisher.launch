@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <launch>	
 	<arg name="path_file"/>
     <param name="path_file" value="$(arg path_file)"/>	    

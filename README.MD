@@ -13,9 +13,9 @@
 - Драйвер двигателей: Pololu md03a
 - STM32F103C8T6 для связи NVidia Jetson с драйвером
 
-<img src="hardware/car.png"/>
+<img src="docs/car.png"/>
 
-[Подробнее об аппаратной платформе](hardware/README.md)
+[Подробнее об аппаратной платформе](HARDWARE.md)
 
 ## Состав репозитория
 ### RCWin32

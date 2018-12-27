@@ -63,6 +63,7 @@ path_file = None
 
 if __name__=="__main__":
     rospy.init_node("path_drawer_node")
+    rospy.loginfo('path_drawer_node started')
 
     if rospy.has_param('path_directory'):
         path_directory = rospy.get_param('path_directory')
