@@ -73,7 +73,7 @@ def odom_callback(msg):
 
     last_path_point_index = index
 
-    print('>>>', last_path_point_index, intersection)
+    #print('>>>', last_path_point_index, intersection)
 
     if len(path.poses) - last_path_point_index <= stop_cnt:
         send_command(0,0)

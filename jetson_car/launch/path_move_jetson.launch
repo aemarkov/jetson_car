@@ -6,9 +6,7 @@
     <!-- logging -->
     <arg name="is_publish_path" default="false"/>
     <arg name="is_log_path" default="false"/>
-    <arg name="logs_directory" default="$(find jetson_car)/logs"/>
-
-    <param name="max_pwm" value="$(arg max_pwm)"/>
+    <arg name="logs_directory" default="$(find jetson_car)/logs"/>    
 
     <!-- ZED-camera SLAM -->
     <include file="$(find zed_wrapper)/launch/zed.launch"/>
@@ -27,7 +25,9 @@
 
     <!-- motors control and message converter -->
     <node name="motors_driver" pkg="jetson_car" type="motors_driver_node" output="screen"/>    
-    <node name="joy_to_motors" pkg="jetson_car" type="joy_to_motors_node.py" output="screen"/>
+    <node name="joy_to_motors" pkg="jetson_car" type="joy_to_motors_node.py" output="screen">
+        <param name="max_pwm" value="$(arg max_pwm)"/>
+    </node>
 
     <!-- The main node - move along the path -->
     <node name="path_mover" pkg="jetson_car" type="path_mover_node.py" if="$(arg run_now)" output="screen"/>    

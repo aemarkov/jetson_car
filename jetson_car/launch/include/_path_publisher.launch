@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <launch>	
-	<arg name="path_file"/>
-    <param name="path_file" value="$(arg path_file)"/>	    
-	<node name="path_publisher" pkg="jetson_car" type="path_pub_node.py" output="screen"/>
+	<arg name="path_file"/>    
+	<node name="path_publisher" pkg="jetson_car" type="path_pub_node.py" output="screen">
+		<param name="path_file" value="$(arg path_file)"/>	    
+	</node>
 </launch>

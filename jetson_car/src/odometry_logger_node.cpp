@@ -45,9 +45,10 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "zed_logger");
     ros::NodeHandle nh;
+    ros::NodeHandle private_nh("~");
 
     // Получение параметров
-    read_params(nh);
+    read_params(private_nh);
 
     ROS_INFO_STREAM("Path publishing:     " << (is_publish_path ? "enabled" : "disabled"));
     ROS_INFO_STREAM("Odom logging:        " << (is_log_path ? "enabled" : "disabled"));
@@ -88,7 +89,7 @@ int main(int argc, char** argv)
     if(!is_log_path && !is_publish_path && !is_log_gps)
     {
         ROS_WARN("No publishing, no loggin. Why you run this node?");
-        exit(-1);
+        exit(0);
     }
 
 
@@ -110,6 +111,7 @@ int main(int argc, char** argv)
 
 void read_params(const ros::NodeHandle& nh)
 {       
+    //note - this is private, so nh(~)
     nh.param<bool>("is_publish_path", is_publish_path, false);
     nh.param<bool>("is_log_gps", is_log_gps, false);
     nh.param<bool>("is_log_path", is_log_path, false);

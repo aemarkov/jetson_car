@@ -21,8 +21,8 @@ if __name__ == '__main__':
 	rospy.init_node('path_pub_node')
 	rospy.loginfo('path_pub_node started')
 
-	if not rospy.has_param('path_file'):
-		rospy.logfatal('path_file parameter not set')
+	if not rospy.has_param('~path_file'):
+		rospy.logfatal('~path_file parameter not set')
 		exit(0)
 
 	path_file = rospy.get_param('path_file')
