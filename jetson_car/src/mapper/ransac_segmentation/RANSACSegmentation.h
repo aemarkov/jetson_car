@@ -34,8 +34,9 @@ public:
      * @param cell_size Occupancy grid cell size in meteres
      * @param distance_threshold RANSAC distance threshold
      * @param viewer PCLVisualizer for debug purpose. This is not really clear solution
+     * @param safe_radius Every obstacle cell will be expanded by this radius
      */
-    RANSACSegmentation(float cell_size, float distance_threshold, pcl::visualization::PCLVisualizer::Ptr viewer=nullptr);
+    RANSACSegmentation(float cell_size, float distance_threshold, float safe_radius,  pcl::visualization::PCLVisualizer::Ptr viewer=nullptr);
 
     /**
      * Find obstacles in point cloud and create OccupancyGrid
@@ -49,6 +50,10 @@ private:
 
     const float CELL_SIZE;                           ///< OccupancyGrid cell size in meters 
     const float DISTANCE_THRESHOLD;                  ///< RANSAC distance threshold
+    const uint8_t SAFE_RADIUS;                       ///< Radius around obstacles marked as dangerous
+
+    const int8_t OBSTACLE_VALUE = 100;               /// < OccupancyGrid obstacle cells value
+    const int8_t NEAR_OBSTACLE_VALUE = 80;           /// < OccupancyGrid cells value in radius around obstacles
     pcl::SACSegmentation<pcl::PointXYZ> seg;         ///< Using for plane segmentation
     tf::TransformBroadcaster _broadcaster;           ///< Using for transform publishing
     tf::TransformListener _listener;                 ///< Using to get transform
@@ -63,6 +68,15 @@ private:
      *  - every cell farther obstacle cell as UNKNOWN space */
     void trace_line(nav_msgs::OccupancyGrid& grid, GridCoord p1, GridCoord p2);
 
+
+    /**
+     * Draw circle around the obstacle to create safe area
+     */
+    void draw_circle(nav_msgs::OccupancyGrid& grid, GridCoord p, int radius, int8_t value);
+    void hline(nav_msgs::OccupancyGrid& grid, int x1, int x2, int y, int8_t value);
+
+    void grid_set(nav_msgs::OccupancyGrid& grid, GridCoord coord, int8_t value);
+    int8_t grid_get(nav_msgs::OccupancyGrid& grid, GridCoord coord);
 
     /**
      * Create transform from WORLD frame to the this OccupancyGrid frame, so grid should match the same

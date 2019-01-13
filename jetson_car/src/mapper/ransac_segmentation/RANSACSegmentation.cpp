@@ -4,9 +4,10 @@
 
 #include "RANSACSegmentation.h"
 
-RANSACSegmentation::RANSACSegmentation(float cell_size, float distance_threshold, pcl::visualization::PCLVisualizer::Ptr viewer) :
+RANSACSegmentation::RANSACSegmentation(float cell_size, float distance_threshold, float safe_radius, pcl::visualization::PCLVisualizer::Ptr viewer) :
         CELL_SIZE(cell_size),
         DISTANCE_THRESHOLD(distance_threshold),
+        SAFE_RADIUS(ceil(safe_radius/cell_size)),
         _viewer(viewer)
 {
     seg.setOptimizeCoefficients(true);
@@ -79,7 +80,7 @@ bool RANSACSegmentation::calculate(pcl::PointCloud<pcl::PointXYZ>::ConstPtr clou
 
         if(invert_indexes[i])
         {
-            grid.data[row * cols + col] = 100;
+            grid_set(grid, GridCoord(row, col), OBSTACLE_VALUE);
         }
     }
 
@@ -92,6 +93,16 @@ bool RANSACSegmentation::calculate(pcl::PointCloud<pcl::PointXYZ>::ConstPtr clou
     {
         trace_line(grid, center_coord, GridCoord(0, col));
         trace_line(grid, center_coord, GridCoord(rows-1, col));
+    }
+
+    for(uint32_t row = 0; row<rows; row++)
+    {
+        for(uint32_t col = 0; col<cols; col++)
+        {
+            GridCoord c(row, col);
+            if(grid_get(grid, c) == 100)
+                draw_circle(grid, c, 5, NEAR_OBSTACLE_VALUE);
+        }
     }
 
     return create_transform(cloud, grid, min);
@@ -131,15 +142,15 @@ void RANSACSegmentation::trace_line(nav_msgs::OccupancyGrid &grid, GridCoord p1,
     {
         if (is_transposed)
         {
-            if(grid.data[x * grid.info.width + y] > 0)
+            if(grid_get(grid, GridCoord(x, y)) > 0)
                 return;
-            grid.data[x * grid.info.width + y] = 0;
+            grid_set(grid, GridCoord(x, y), 0);
         }
         else
         {
-            if(grid.data[y * grid.info.width + x] > 0)
+            if(grid_get(grid, GridCoord(y, x)) > 0)
                 return;
-            grid.data[y * grid.info.width + x] = 0;
+            grid_set(grid, GridCoord(y, x), 0);
         }
 
         err+=derr;
@@ -151,6 +162,60 @@ void RANSACSegmentation::trace_line(nav_msgs::OccupancyGrid &grid, GridCoord p1,
 
         x += dx > 0 ? 1 : -1;
     }
+}
+
+void RANSACSegmentation::draw_circle(nav_msgs::OccupancyGrid& grid, GridCoord p, int radius, int8_t value)
+{
+    int x = 0;
+    int y = radius;
+    int delta = 1 - 2*radius;
+    int error = 0;
+
+    while (y>=0)
+    {
+        hline(grid, p.x, p.x + x, p.y + y, value);
+        hline(grid, p.x, p.x + x, p.y - y, value);
+        hline(grid, p.x, p.x - x, p.y + y, value);
+        hline(grid, p.x, p.x - x, p.y - y, value);
+
+        error = 2*(delta + y) - 1;
+        if(delta < 0 && error <=0)
+            delta += 2 * ++x + 1;
+        else if(delta > 0 && error > 0)
+            delta -= 2* --y + 1;
+        else
+            delta += 2 * (++x - y--);
+
+    }
+}
+
+
+void RANSACSegmentation::hline(nav_msgs::OccupancyGrid& grid, int x1, int x2, int y, int8_t value)
+{
+    if(x2 < x1)
+        std::swap(x1, x2);
+
+    for(int x = x1; x<= x2; x++)
+    {
+        GridCoord c(y,x);
+        if(y >= 0 && y < grid.info.height && x >= 0 && x < grid.info.width && grid_get(grid, c) <= 0)
+            grid_set(grid, c, value);
+    }
+}
+
+void RANSACSegmentation::grid_set(nav_msgs::OccupancyGrid& grid, GridCoord coord, int8_t value)
+{
+    grid.data[coord.row * grid.info.width + coord.col] = value;
+}
+
+int8_t RANSACSegmentation::grid_get(nav_msgs::OccupancyGrid& grid, GridCoord coord)
+{
+    return grid.data[coord.row * grid.info.width + coord.col];
+}
+
+bool grid_check(nav_msgs::OccupancyGrid &grid, GridCoord coord)
+{
+    return coord.row >= 0 && coord.row < grid.info.height && coord.col >= 0 && coord.col < grid.info.width;
 }
 
 
