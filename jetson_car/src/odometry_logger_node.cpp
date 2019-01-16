@@ -33,7 +33,7 @@ ofstream full_log_file;                     // Лог XYZ RPY Q от време�
 ros::Time t0;                               // Начальный момент времени
 ros::Publisher path_pub;                    // Публишер топика траектории
 
-nav_msgs::Path path;
+nav_msgs::Path reference_path;
 
 void read_params(const ros::NodeHandle& nh);
 string get_filename(const string& directory, const string& suffix);
@@ -146,9 +146,9 @@ void pos_cb(const geometry_msgs::PoseStamped& msg)
 {
     if(is_publish_path)
     {
-        path.header = msg.header;
-        path.poses.push_back(msg);
-        path_pub.publish(path);
+        reference_path.header = msg.header;
+        reference_path.poses.push_back(msg);
+        path_pub.publish(reference_path);
     }
 
     if(is_log_path)

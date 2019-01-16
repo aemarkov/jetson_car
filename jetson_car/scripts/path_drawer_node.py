@@ -11,7 +11,7 @@ from visualization_msgs.msg import *
 import os
 from datetime import datetime
 
-path_topic = 'path'
+path_topic = 'reference_path'
 tf_frame = 'map'
 
 def create_marker():
@@ -39,6 +39,8 @@ def create_interactive_marker():
     control.orientation_mode = InteractiveMarkerControl.VIEW_FACING
     control.interaction_mode = InteractiveMarkerControl.MOVE_PLANE
     control.independent_marker_orientation = True    
+    #control.interaction_mode = InteractiveMarkerControl.MENU
+    #control.name="draw_path_menu";
     control.markers.append(create_marker())
     int_marker.controls.append(control)
     return int_marker
@@ -57,6 +59,9 @@ def marker_cb(feedback):
 
     if path_file!=None:
         path_file.write(str(p.x)+'\t'+str(p.y)+'\n')
+
+def menu_callback(feedback):
+    print(feedback)
 
 path_directory = None
 path_file = None
@@ -86,5 +91,6 @@ if __name__=="__main__":
     server = InteractiveMarkerServer("drawer_marker")
     draw_marker = create_interactive_marker()
     server.insert(draw_marker, marker_cb)
+    #server.setCallback('draw_path_menu', menu_callback)
     server.applyChanges()
     rospy.spin()

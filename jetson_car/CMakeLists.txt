@@ -53,6 +53,6 @@ add_executable(mapper_node src/mapper/mapper_node.cpp src/mapper/ransac_segmenta
 target_link_libraries(mapper_node ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 add_dependencies(mapper_node  ${catkin_EXPORTED_TARGETS})
 
-add_executable(path_planner_node src/path_planner/path_planner_node.cpp)
-target_link_libraries(path_planner_node ${catkin_LIBRARIES} ${OMPL_LIBRARIES})
-add_dependencies(path_planner_node  ${catkin_EXPORTED_TARGETS})
+add_executable(motion_planner_node src/motion_planner/motion_planner_node.cpp)
+target_link_libraries(motion_planner_node ${catkin_LIBRARIES} ${OMPL_LIBRARIES})
+add_dependencies(motion_planner_node  ${catkin_EXPORTED_TARGETS})

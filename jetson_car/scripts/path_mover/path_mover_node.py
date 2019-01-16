@@ -110,7 +110,7 @@ if __name__ == '__main__':
 
 
     commands_pub = rospy.Publisher('joy', Joy, queue_size = 100)
-    rospy.Subscriber('/path', Path, path_callback)
+    rospy.Subscriber('/local_path', Path, path_callback)
     rospy.Subscriber('/zed/odom', Odometry, odom_callback)
     rviz = RvizHelpers('/circle', '/intersect')
     

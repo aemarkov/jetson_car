@@ -32,11 +32,12 @@ int main(int argc, char** argv)
     float cell_size, distance_threshold, safe_radius;
     nh.param<float>("cell_size", cell_size, 0.25);
     nh.param<float>("distance_threshold", distance_threshold, 0.1);
-    nh.param<float>("safe_radius", safe_radius, 0.3);
+    nh.param<float>("safe_radius", safe_radius, 0.5);
 
     ROS_INFO("Mapper node started");
     ROS_INFO_STREAM("cell_size:          " << cell_size);
     ROS_INFO_STREAM("distance_threshold: " << distance_threshold);
+    ROS_INFO_STREAM("safe_radius:        " << safe_radius);
 
     pcl::visualization::PCLVisualizer::Ptr viewer = nullptr;
 #ifdef DEBUG_VIEW
@@ -46,7 +47,7 @@ int main(int argc, char** argv)
     viewer->initCameraParameters();
 #endif
 
-    segmentation = std::make_unique<RANSACSegmentation>(cell_size, distance_threshold, 5, viewer);
+    segmentation = std::make_unique<RANSACSegmentation>(cell_size, distance_threshold, safe_radius, viewer);
     auto cloud_sub = nh.subscribe<sensor_msgs::PointCloud2>("velodyne_points", 1, pcloud_callback);
     occupancy_grid_publisher = nh.advertise<nav_msgs::OccupancyGrid>("occupancy_grid", 1);
 

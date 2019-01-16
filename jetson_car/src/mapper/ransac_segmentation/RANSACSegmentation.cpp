@@ -95,13 +95,16 @@ bool RANSACSegmentation::calculate(pcl::PointCloud<pcl::PointXYZ>::ConstPtr clou
         trace_line(grid, center_coord, GridCoord(rows-1, col));
     }
 
-    for(uint32_t row = 0; row<rows; row++)
+    if(SAFE_RADIUS>0)
     {
-        for(uint32_t col = 0; col<cols; col++)
+        for (uint32_t row = 0; row < rows; row++)
         {
-            GridCoord c(row, col);
-            if(grid_get(grid, c) == 100)
-                draw_circle(grid, c, 5, NEAR_OBSTACLE_VALUE);
+            for (uint32_t col = 0; col < cols; col++)
+            {
+                GridCoord c(row, col);
+                if (grid_get(grid, c) == 100)
+                    draw_circle(grid, c, 5, NEAR_OBSTACLE_VALUE);
+            }
         }
     }
 
