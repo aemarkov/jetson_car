@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="max_pwm" default="20"/>
+    <arg name="max_pwm" default="15"/>
     <arg name="run_now" default="true"/>
     <arg name="path_file" default=""/>
+    <arg name="obstacles" default="false"/>
     <!-- logging -->
     <arg name="is_publish_path" default="false"/>
     <arg name="is_log_path" default="false"/>
@@ -10,15 +11,32 @@
 
     <!-- ZED-camera SLAM -->
     <include file="$(find zed_wrapper)/launch/zed.launch"/>
-    <!--<include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
-    <node pkg="tf" type="static_transform_publisher" name="zed_to_gps"  args="0 0 0 -1.57 0 0 zed_camera_center velodyne 10"/>
-    <node name="map" pkg="jetson_car" type="mapper_node" output="screen">
+
+    <!-- Velodyne -->
+    <group ns="velodyne">
+        <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch" if="$(arg obstacles)"/>    
+        <node pkg="tf" type="static_transform_publisher" name="zed_to_gps"  args="0 0 0 -1.57 0 0 zed_camera_center velodyne 10" if="$(arg obstacles)"/>
+    </group>
+
+    <!-- Occupancy map creation -->
+    <node name="mapper" pkg="jetson_car" type="mapper_node" output="screen" if="$(arg obstacles)">
         <param name="cell_size" value="0.1"/>
         <param name="distance_threshold" value="0.25"/>
         <param name="safe_radius" value="0.4"/>
-        <param name="cnt_threshold" value="20"/>
+        <param name="cnt_threshold" value="1"/>
+        <remap from="point_cloud" to="/velodyne/velodyne_points"/>
     </node>
-    <node name="planner" pkg="jetson_car" type="motion_planner_node" output="screen"/>-->
+
+    <!-- Obstacle avoidance -->
+    <!--<node name="planner" pkg="jetson_car" type="motion_planner_node" output="screen" if="$(arg obstacles)"/>-->
+    <node name="planner" pkg="jetson_car" type="motion_planner_node.py" output="screen" if="$(arg obstacles)"/>
+
+    <!-- The main node - move along the path -->
+    <node name="path_mover" pkg="jetson_car" type="path_mover_node.py" if="$(arg run_now)" output="screen">
+        <param name="p_coef" value="3"/>
+        <param name="radius" value="0.3"/>
+        <remap from="local_path" to="reference_path" unless="$(arg obstacles)"/>
+    </node>
 
     <!-- publish path from file -->
     <include file="$(find jetson_car)/launch/include/_path_publisher.launch" if="$(eval path_file!='')">
@@ -37,7 +55,4 @@
     <node name="joy_to_motors" pkg="jetson_car" type="joy_to_motors_node.py" output="screen">
         <param name="max_pwm" value="$(arg max_pwm)"/>
     </node>
-
-    <!-- The main node - move along the path -->
-    <node name="path_mover" pkg="jetson_car" type="path_mover_node.py" if="$(arg run_now)" output="screen"/>    
 </launch>

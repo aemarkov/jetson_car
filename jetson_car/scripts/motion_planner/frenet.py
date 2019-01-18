@@ -1,5 +1,7 @@
 import numpy as np
 
+MIN_POINT_DIFF = 0.05
+
 class FrenetFrame:
     """
     Represents the Frenet Frame
@@ -35,6 +37,7 @@ class FrenetFrame:
                      p1p2 is a tangent vector.             
         """
         # local frame axis in parent frame
+        #print('(%0.2f, %0.2f), (%0.2f, %0.2f)' % (p1[0], p1[1], p2[0], p2[1]))
         self.br = [0, 0, 1]
         self.tr = p2-p1
         self.tr = self.tr/np.linalg.norm(self.tr)
@@ -93,20 +96,22 @@ def path_to_global(local_trajectory, trajectory):
     global_trajectory = np.zeros((len(local_trajectory), 2))
     trajectory_index = 0
     trajectory_s = 0
-    trajectory_s_next = np.linalg.norm(trajectory[0] - trajectory[1])
     
     for i, point in enumerate(local_trajectory):
         s = point[0]
         
-        while True:            
-            if trajectory_s_next >= s:
-                break
-            
-            if trajectory_index >= len(trajectory)-2:
+        # Find index of the point on curve with s (covered length)
+        # more then S of the current point in frenet frame
+        while True:
+
+            if trajectory_index >= len(trajectory)-1:
                 return global_trajectory[:i]
-                
-            trajectory_s = trajectory_s_next
-            trajectory_s_next += np.linalg.norm(trajectory[trajectory_index+1] - trajectory[trajectory_index])
+
+            segment_len =  np.linalg.norm(trajectory[trajectory_index+1] - trajectory[trajectory_index])
+            if trajectory_s + segment_len >= s:
+                break
+
+            trajectory_s += segment_len
             trajectory_index += 1
             
         p1 = trajectory[trajectory_index]

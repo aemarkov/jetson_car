@@ -90,7 +90,9 @@ last_path_point_index = 0
 def pose_callback(msg):
     global last_path_point_index
 
-    if path is None:
+    if path is None or len(path.poses) == 0:
+        rospy.logwarn('No path')
+        send_command(0,0)
         return
 
     # Текущее положение
@@ -132,11 +134,11 @@ if __name__ == '__main__':
     RADIUS = rospy.get_param('~radius', RADIUS)    
     P_COEF = rospy.get_param('~P_COEF', P_COEF)
 
-    rospy.loginfo('RADIUS: ', RADIUS)
-    rospy.loginfo('P_COEF: ', P_COEF)
+    rospy.loginfo('RADIUS: %f', RADIUS)
+    rospy.loginfo('P_COEF: %f', P_COEF)
 
     commands_pub = rospy.Publisher('joy', Joy, queue_size = 100)
-    rospy.Subscriber('/reference_path', Path, path_callback)
+    rospy.Subscriber('/local_path', Path, path_callback)
     rospy.Subscriber('/zed/pose', PoseStamped, pose_callback)
     rviz = RvizHelpers('/circle', '/intersect')
     

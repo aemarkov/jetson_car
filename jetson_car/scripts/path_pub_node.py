@@ -7,7 +7,7 @@ from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
 from std_msgs.msg import Header
 
-path_topic = 'local_path'
+path_topic = 'reference_path'
 tf_frame   = 'map'
 
 def get_pose(x,y):

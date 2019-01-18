@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 #endif
 
     segmentation = std::make_unique<RANSACSegmentation>(cell_size, distance_threshold, cnt_threshold, safe_radius);
-    auto cloud_sub = nh.subscribe<sensor_msgs::PointCloud2>("velodyne_points", 1, pcloud_callback);
+    auto cloud_sub = nh.subscribe<sensor_msgs::PointCloud2>("point_cloud", 1, pcloud_callback);
     occupancy_grid_publisher = nh.advertise<nav_msgs::OccupancyGrid>("occupancy_grid", 1);
 
 #if defined(DEBUG_VIEW)
