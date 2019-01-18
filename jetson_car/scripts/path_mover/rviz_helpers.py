@@ -35,8 +35,8 @@ class RvizHelpers:
         for i in range(steps+1):
             p =  Point()
             angle = 2 * math.pi / steps * i
-            p.x = center[0] + math.cos(angle)*r
-            p.y = center[1] + math.sin(angle)*r
+            p.x = center.x + math.cos(angle)*r
+            p.y = center.y + math.sin(angle)*r
             p.z = 0
             self.circle_marker.points.append(p)
 
@@ -46,7 +46,7 @@ class RvizHelpers:
     def intersection(self, position, intersection):
         self.intersect_marker.points = []
         #for intersection in intersections:
-        self.intersect_marker.points.append(msg_helpers.array_to_point(position))
-        self.intersect_marker.points.append(msg_helpers.array_to_point(intersection))    
+        self.intersect_marker.points.append(position)
+        self.intersect_marker.points.append(intersection)    
         self.intersect_pub.publish(self.intersect_marker)
 
