@@ -15,10 +15,10 @@ from rviz_helpers import RvizHelpers
 
 ###############################################################################
 
-radius = 0.3             # Радиус просмотра вперед
+radius = 0.6             # Радиус просмотра вперед
 stop_cnt = 5             # Количество оставшихся точек до конца траектории, при которых можно остановится
 points_lookup_count = 10 # В каком диапазоне нужно искать следующие точки (от последней)
-k = 1.5                  # Коэффциент управления
+k = 2.5                  # Коэффциент управления
 
 path = None
 ###############################################################################
@@ -53,6 +53,7 @@ def send_command(forward, rot):
 def path_callback(msg):
     global path
     path = msg
+    rospy.loginfo(len(path.poses))
 
 # получение текущего положения машинки
 last_path_point_index = 0
@@ -67,24 +68,26 @@ def odom_callback(msg):
     orientation =  euler_from_quaternion(msg_helpers.quaterion_to_array(msg.pose.pose.orientation))[2]
 
     # определение ближайшего пересечения траектории с окружностью
-    index, intersection = intersections_finder.find(path,position, radius, 0.01, 
-                                                    last_path_point_index, 
-                                                    points_lookup_count)
+    index, intersection = intersections_finder.find(path,position, radius, 0.01)#, 
+                                                    #0, 
+                                                    #len(path.poses)*10)
 
     last_path_point_index = index
 
     #print('>>>', last_path_point_index, intersection)
 
     if len(path.poses) - last_path_point_index <= stop_cnt:
-        send_command(0,0)
-        return
+        rospy.loginfo("End of the path")
+        #send_command(0,0)
+        #return
 
     # отрисова окружности поиска для оладки
     rviz.circle(position, radius)
 
     if intersection is None:
         rospy.logwarn('Too far from trajectory')
-        send_command(0, 0)
+        send_command(1, 0)
+        #send_command(0, 0)
         return
     
     # Отрисовка пересечений

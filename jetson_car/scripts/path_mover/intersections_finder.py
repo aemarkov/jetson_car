@@ -82,7 +82,7 @@ def __find_intersection(p1, p2, O, r, eps):
 # eps        - точность проверки 
 # start      - с какого индекса надо начинать искать (в обе стороны)
 # length     - какое количество точек искать, начиная со start
-def find(path, O, r, eps, start, length):        
+def find(path, O, r, eps): #, start, length):        
     #intersetcs = []
     #poses=path.poses[start:length]
     #print(start, length, len(poses))
@@ -96,17 +96,19 @@ def find(path, O, r, eps, start, length):
     
     #return intersetcs
 
-    i = max(start - length/2, 0)
+    #i = max(start - length/2, 0)
     intersect = None
     intersect_index = 0
-    while ((i < start + length/2) or (intersect is None)) and (i < len(path.poses)-1):
+    #while ((i < start + length/2) or (intersect is None)) and (i < len(path.poses)-1):
+    for i in range(0, len(path.poses)-1):
         intersect_ = __find_intersection(msg_helpers.point_to_array(path.poses[i].pose.position),
                                            msg_helpers.point_to_array(path.poses[i+1].pose.position),
                                            O, r, eps)
         if intersect_ is not None:
-            intersect_index = i
-            intersect = intersect_
+            return (i, intersect_)
+            #intersect_index = i
+            #intersect = intersect_
 
-        i+=1
+        #i+=1
 
     return (intersect_index, intersect)

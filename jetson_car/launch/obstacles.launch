@@ -10,15 +10,15 @@
 
     <!-- ZED-camera SLAM -->
     <include file="$(find zed_wrapper)/launch/zed.launch"/>
-    <!--<include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
+    <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
     <node pkg="tf" type="static_transform_publisher" name="zed_to_gps"  args="0 0 0 -1.57 0 0 zed_camera_center velodyne 10"/>
     <node name="map" pkg="jetson_car" type="mapper_node" output="screen">
         <param name="cell_size" value="0.1"/>
         <param name="distance_threshold" value="0.25"/>
-        <param name="safe_radius" value="0.4"/>
+        <param name="safe_radius" value="0.6"/>
         <param name="cnt_threshold" value="20"/>
     </node>
-    <node name="planner" pkg="jetson_car" type="motion_planner_node" output="screen"/>-->
+    <node name="planner" pkg="jetson_car" type="motion_planner_node" output="screen"/>
 
     <!-- publish path from file -->
     <include file="$(find jetson_car)/launch/include/_path_publisher.launch" if="$(eval path_file!='')">

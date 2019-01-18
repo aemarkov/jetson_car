@@ -37,8 +37,8 @@ struct ObstacleOnPath
 {
     size_t closest_point;
     bool has_in, has_out;
-    size_t in_index, out_index;
-    GridCoord in_coord, out_coord;
+    size_t out_index;
+    GridCoord out_coord;
 };
 
 
@@ -76,7 +76,7 @@ bool grid_point_to_cell(const nav_msgs::OccupancyGrid& grid, geometry_msgs::Poin
 int8_t get_grid_value(const nav_msgs::OccupancyGrid& grid, GridCoord coord);
 
 nav_msgs::OccupancyGrid::ConstPtr grid = nullptr;
-geometry_msgs::PoseStamped::ConstPtr goal = nullptr;
+//geometry_msgs::PoseStamped::ConstPtr goal = nullptr;
 geometry_msgs::PoseStamped::ConstPtr pose  = nullptr;
 nav_msgs::Path::ConstPtr reference_path  = nullptr;
 
@@ -89,6 +89,10 @@ const std::string OCCUPANCY_GRID_FRAME = "occupancy_grid";
 const double REPLANE_INTERVAL = 0.5;
 const double LONGITUDINAL_SPEED = 3.0;
 
+
+bool is_wtf = true;
+geometry_msgs::Point end_point;
+
 int main(int argc, char** argv)
 {
 
@@ -100,7 +104,7 @@ int main(int argc, char** argv)
 
     listener = std::make_unique<tf::TransformListener>(nh);
     auto grid_sub = nh.subscribe<nav_msgs::OccupancyGrid>("/occupancy_grid", 1, grid_callback);
-    auto goal_sub = nh.subscribe<geometry_msgs::PoseStamped>("goal", 1, goal_callback);
+    //auto goal_sub = nh.subscribe<geometry_msgs::PoseStamped>("goal", 1, goal_callback);
     auto pose_sub = nh.subscribe<geometry_msgs::PoseStamped>("/zed/pose", 1, pose_callback);
     auto path_sub = nh.subscribe<nav_msgs::Path>("/reference_path", 1, path_callback);
     path_pub = nh.advertise<nav_msgs::Path>("/local_path", 1);
@@ -110,7 +114,9 @@ int main(int argc, char** argv)
     while(ros::ok())
     {
         ros::spinOnce();
-        plan_path();
+        if(is_wtf)
+            plan_path();
+
         rate.sleep();
     }
 }
@@ -131,7 +137,16 @@ void goal_callback(const geometry_msgs::PoseStamped::ConstPtr& msg)
 void pose_callback(const geometry_msgs::PoseStamped::ConstPtr& msg)
 {
     //std::lock_guard<std::mutex> guard(path_planning_mutex);
-    //pose = msg;
+    float dist = sqrt(pow(msg->pose.position.x - end_point.x, 2) + pow(msg->pose.position.y - end_point.y, 2));
+    if(!is_wtf)
+        ROS_INFO_STREAM("Dist to path end: " << dist);
+
+    if(dist < 0.4 && !is_wtf)
+    {
+        is_wtf = true;
+        ROS_INFO("Path unlocked");
+    }
+    pose = msg;
 }
 
 void path_callback(const nav_msgs::Path::ConstPtr& msg)
@@ -262,9 +277,36 @@ bool a_star(const nav_msgs::OccupancyGrid& grid, GridCoord from, GridCoord to,  
     return false;
 }
 
+void interpolate_path(const std::vector<geometry_msgs::PoseStamped>& sub_path, std::vector<geometry_msgs::PoseStamped>& interpolated, int factor)
+{
+    int N = sub_path.size();
+    int N1 = N + (N-1)*(factor-1);
+    interpolated.resize(N1);
+    for(int i = 0; i<sub_path.size()-1; i++)
+    {
+        auto point = sub_path[i];
+        auto p1 = sub_path[i].pose.position;
+        auto p2 = sub_path[i+1].pose.position;
+        float x_step = (p2.x - p1.x)/factor;
+        float y_step = (p2.y - p1.y)/factor;
+
+
+        interpolated.push_back(point);
+        for(int j = 0; j<factor-1; j++)
+        {
+            point.pose.position.x+=x_step;
+            point.pose.position.y+=y_step;
+            interpolated.push_back(point);
+        }
+    }
+
+    interpolated.push_back(sub_path[N-1]);
+}
+
 void plan_path()
 {
     //std::lock_guard<std::mutex> guard(path_planning_mutex);
+    std::vector<geometry_msgs::PoseStamped> sub_path_interpolated();
 
     if(reference_path == nullptr || pose == nullptr || grid == nullptr)
         return;
@@ -274,9 +316,16 @@ void plan_path()
     path.header.stamp = ros::Time::now();
 
     auto obstacle = find_obstacle(*reference_path, *pose, REPLANE_INTERVAL, LONGITUDINAL_SPEED);
+    /*ROS_INFO("1");
+    ROS_INFO_STREAM("out_index: " << obstacle.out_index);
+    ROS_INFO_STREAM("CP: " << obstacle.closest_point);
+    ROS_INFO_STREAM("len: " << reference_path->poses.size());
+    ROS_INFO_STREAM("In, out" << obstacle.has_in << " "<<obstacle.has_out);*/
+
     if(!obstacle.has_in && !obstacle.has_out)
     {
-        ROS_INFO("No obstacle");
+        ROS_INFO("No obstacle");  
+        //ROS_INFO_STREAM(obstacle.closest_point << " " << obstacle.out_index);      
 
         for(int i = obstacle.closest_point; i<=obstacle.out_index; i++)
             path.poses.push_back(reference_path->poses[i]);
@@ -286,36 +335,47 @@ void plan_path()
         ROS_WARN("No path");
     }
     else
-    {
-        ROS_INFO("Can go round obstacle");
-
-        std::vector<geometry_msgs::PoseStamped> sub_path;
-        if(a_star(*grid, obstacle.in_coord, obstacle.out_coord, sub_path))
-        {
-
-            for(int i = obstacle.closest_point; i<=obstacle.in_index; i++)
-                path.poses.push_back(reference_path->poses[i]);
-
-            std::vector<geometry_msgs::PoseStamped> sub_path_smooth(sub_path.size());
-            for(int i = 1; i<sub_path.size() - 1; i++)
+    {        
+        //auto p = reference_path->poses[obstacle.closest_point].pose.position;
+        //ROS_INFO("3");
+        GridCoord p_coord;
+        if(grid_point_to_cell(*grid, world_point_to_grid(*grid, pose->pose.position).point, p_coord))
+        { 
+            //ROS_INFO("4");
+            std::vector<geometry_msgs::PoseStamped> sub_path;
+            if(a_star(*grid, p_coord, obstacle.out_coord, sub_path))
             {
-                auto p1 = sub_path[i-1];
-                auto p2 = sub_path[i+1];
 
-                p1.pose.position.x = (p1.pose.position.x + p2.pose.position.x)/2;
-                p1.pose.position.y = (p1.pose.position.y + p2.pose.position.y)/2;
-                sub_path_smooth[i] = p1;
+                /*for(int i = obstacle.closest_point; i<=obstacle.in_index; i++)
+                    path.poses.push_back(reference_path->poses[i]);*/
+
+                std::vector<geometry_msgs::PoseStamped> sub_path_interpolated;
+                interpolate_path(sub_path,  sub_path_interpolated, 3);
+                ROS_INFO_STREAM("Path: " << sub_path.size() << " " <<sub_path_interpolated.size());
+
+                for(auto& p: sub_path_interpolated)
+                    path.poses.push_back(p);
+
+                int cnt = obstacle.out_index+10;
+                if(cnt > reference_path->poses.size())
+                    cnt = reference_path->poses.size();
+
+                for(int i = obstacle.out_index; i<cnt; i++)
+                    path.poses.push_back(reference_path->poses[i]);
+
+                end_point = path.poses[path.poses.size()-1].pose.position;
+                is_wtf = false;
+                ROS_INFO("Moving around obstacle");
+                ROS_INFO("Path locked");
             }
-
-            sub_path_smooth[0] = sub_path[0];
-            sub_path_smooth[sub_path.size()-1] = sub_path[sub_path.size()-1];
-
-            for(auto& p: sub_path_smooth)
-                path.poses.push_back(p);
+            else
+            {
+                ROS_WARN("No path");
+            }
         }
         else
         {
-            ROS_WARN("No path");
+            ROS_WARN("Wtf");
         }
     }
 
@@ -353,9 +413,7 @@ ObstacleOnPath find_obstacle(const nav_msgs::Path& path, const geometry_msgs::Po
 
         if(find_in && pnext_value > 0)
         {
-            find_in = false;
-            obstacle.in_index = index;
-            obstacle.in_coord = p_coord;
+            find_in = false;            
             obstacle.has_in = true;
         }
         else if(!find_in && p_value <= 0)

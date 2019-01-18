@@ -7,7 +7,7 @@ from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
 from std_msgs.msg import Header
 
-path_topic = 'path'
+path_topic = 'local_path'
 tf_frame   = 'map'
 
 def get_pose(x,y):
@@ -25,7 +25,7 @@ if __name__ == '__main__':
 		rospy.logfatal('~path_file parameter not set')
 		exit(0)
 
-	path_file = rospy.get_param('path_file')
+	path_file = rospy.get_param('~path_file')
 	pub = rospy.Publisher(path_topic, Path, queue_size = 1, latch=True)
 
 	path = Path()

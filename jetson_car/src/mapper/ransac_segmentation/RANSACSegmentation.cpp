@@ -4,11 +4,11 @@
 
 #include "RANSACSegmentation.h"
 
-RANSACSegmentation::RANSACSegmentation(float cell_size, float distance_threshold, float safe_radius, pcl::visualization::PCLVisualizer::Ptr viewer) :
+RANSACSegmentation::RANSACSegmentation(float cell_size, float distance_threshold, int cnt_threshold, float safe_radius) :
         CELL_SIZE(cell_size),
         DISTANCE_THRESHOLD(distance_threshold),
         SAFE_RADIUS(ceil(safe_radius/cell_size)),
-        _viewer(viewer)
+        CNT_THRESHOLD(cnt_threshold)
 {
     seg.setOptimizeCoefficients(true);
     seg.setModelType(pcl::SACMODEL_PLANE);
@@ -19,10 +19,10 @@ RANSACSegmentation::RANSACSegmentation(float cell_size, float distance_threshold
 bool RANSACSegmentation::calculate(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, nav_msgs::OccupancyGrid& grid)
 {
     // RANSAC plane estimation
-    pcl::ModelCoefficients coefficients;
+    /*pcl::ModelCoefficients coefficients;
     pcl::PointIndices inliers;
     seg.setInputCloud(cloud);
-    seg.segment(inliers, coefficients);
+    seg.segment(inliers, coefficients);*/
 
      /* TODO: improvements
       *   1) Sometimes RANSAC detect walls or some other planes. Maybe check ModelCoefficients
@@ -41,7 +41,7 @@ bool RANSACSegmentation::calculate(pcl::PointCloud<pcl::PointXYZ>::ConstPtr clou
      */
 
     // debug visualization
-    if(_viewer != nullptr)
+    /*if(_viewer != nullptr)
     {
         if(_viewer->contains("cloud"))
             _viewer->removePointCloud("cloud");
@@ -50,7 +50,7 @@ bool RANSACSegmentation::calculate(pcl::PointCloud<pcl::PointXYZ>::ConstPtr clou
         if(_viewer->contains("plane"))
             _viewer->removeShape("plane");
         _viewer->addPlane(coefficients, "plane");
-    }
+    }*/
 
     // Find cloud size and create occupancy grid
     pcl::PointXYZ min, max;
@@ -63,26 +63,45 @@ bool RANSACSegmentation::calculate(pcl::PointCloud<pcl::PointXYZ>::ConstPtr clou
     grid.info.resolution = CELL_SIZE;
     grid.data.resize(rows*cols, -1);
 
-    std::vector<bool> invert_indexes(cloud->points.size(), true);
+    /*std::vector<bool> invert_indexes(cloud->points.size(), true);
     for(int i = 0; i<inliers.indices.size(); i++)
-        invert_indexes[inliers.indices[i]] = false;
+        invert_indexes[inliers.indices[i]] = false;*/
 
-    int row0 = (int)((0 - min.y)/CELL_SIZE);
-    int col0 = (int)((0 - min.x)/CELL_SIZE);
-    GridCoord center_coord(row0, col0);
+    std::vector<int> indexes_cnt(rows*cols, 0);
+    for(int i = 0; i<cloud->points.size(); i++)
+    {
+        //if(invert_indexes[i])
+        //{
+            const auto &point = cloud->at(i);
+            size_t row = (size_t) ((point.y - min.y) / CELL_SIZE);
+            size_t col = (size_t) ((point.x - min.x) / CELL_SIZE);
+            if(point.z > 0)
+                indexes_cnt[row * cols + col]++;
+        //}
+    }    
+
+    for(int i = 0; i<rows*cols; i++)
+    {
+        if(indexes_cnt[i]>=CNT_THRESHOLD)
+            grid.data[i] = OBSTACLE_VALUE;
+    }    
 
     // Fill occupancy grid with obstacles
-    for(int i = 0; i<cloud->points.size(); i++)
+    /*for(int i = 0; i<cloud->points.size(); i++)
     {
         const auto &point = cloud->at(i);
         size_t row = (size_t) ((point.y - min.y) / CELL_SIZE);
         size_t col = (size_t) ((point.x - min.x) / CELL_SIZE);
 
-        if(invert_indexes[i])
+        if(indexes_cnt[i]>=CNT_THRESHOLD)
         {
             grid_set(grid, GridCoord(row, col), OBSTACLE_VALUE);
         }
-    }
+    }*/
+
+    int row0 = (int)((0 - min.y)/CELL_SIZE);
+    int col0 = (int)((0 - min.x)/CELL_SIZE);
+    GridCoord center_coord(row0, col0);
 
     for(size_t row = 0; row<rows; row++)
     {
@@ -103,7 +122,7 @@ bool RANSACSegmentation::calculate(pcl::PointCloud<pcl::PointXYZ>::ConstPtr clou
             {
                 GridCoord c(row, col);
                 if (grid_get(grid, c) == 100)
-                    draw_circle(grid, c, 5, NEAR_OBSTACLE_VALUE);
+                    draw_circle(grid, c, SAFE_RADIUS, NEAR_OBSTACLE_VALUE);
             }
         }
     }

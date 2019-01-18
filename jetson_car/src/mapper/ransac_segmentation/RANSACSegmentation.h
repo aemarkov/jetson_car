@@ -17,6 +17,7 @@
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/filters/extract_indices.h>
 
 #include <mapper/GridCoord.h>
 
@@ -36,7 +37,7 @@ public:
      * @param viewer PCLVisualizer for debug purpose. This is not really clear solution
      * @param safe_radius Every obstacle cell will be expanded by this radius
      */
-    RANSACSegmentation(float cell_size, float distance_threshold, float safe_radius,  pcl::visualization::PCLVisualizer::Ptr viewer=nullptr);
+    RANSACSegmentation(float cell_size, float distance_threshold, int cnt_threshold, float safe_radius);
 
     /**
      * Find obstacles in point cloud and create OccupancyGrid
@@ -51,6 +52,7 @@ private:
     const float CELL_SIZE;                           ///< OccupancyGrid cell size in meters 
     const float DISTANCE_THRESHOLD;                  ///< RANSAC distance threshold
     const uint8_t SAFE_RADIUS;                       ///< Radius around obstacles marked as dangerous
+    const int CNT_THRESHOLD;
 
     const int8_t OBSTACLE_VALUE = 100;               /// < OccupancyGrid obstacle cells value
     const int8_t NEAR_OBSTACLE_VALUE = 80;           /// < OccupancyGrid cells value in radius around obstacles
