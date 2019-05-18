@@ -9,6 +9,8 @@
 ```sh
 $ roslaunch jetson_car path_move_jetson.launch obstacles:=true path_file:=<absolute path>
 ```
+**NOTE:** Путь должен быть абсолютный, т.е. не `~/path/line.txt`, а `/home/nvidia/path/line.txt`!!!
+
 3. Host, визуализация
 ```sh
 $ jetson_ros
