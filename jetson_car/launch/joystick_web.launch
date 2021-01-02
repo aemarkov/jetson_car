@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- Launch jetson_car with manual control via web app -->
+<launch>
+    <arg name="max_pwm" default="50"/>
+
+    <node name="motors_driver" pkg="jetson_car" type="motors_driver_node" output="screen" required="true"/>    
+    <node name="joy_to_motors" pkg="jetson_car" type="joy_to_motors_node.py" output="screen" required="true">    
+        <param name="max_pwm" value="$(arg max_pwm)"/>
+	<param name="is_loop" value="true"/>
+    </node>
+    <node name="web_control_server" pkg="jetson_car" type="web_control_server.sh" output="screen" required="true"/>
+    <node name="rosbridge" pkg="rosbridge_server" type="rosbridge_websocket" output="screen" required="true"/>
+</launch>
