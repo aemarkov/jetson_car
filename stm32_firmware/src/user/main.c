@@ -8,31 +8,28 @@
 #include <drivers/motors/motors.h>
 #include <stdio.h>
 
-#define MOTORS_STOP_TIMEOUT 30 //300 мс
+#define MOTORS_STOP_TIMEOUT 30 //300 ms
 
 volatile int16_t timeout_counter;
 
 void UartHandler(int8_t left, int8_t right)
 {
     Motors_Control(left, right);
+    // Reset timeout
     timeout_counter = MOTORS_STOP_TIMEOUT;    
 }
 
-
-
 void stopTimerInit()
 {
-    /* Таймер для остановки двигателей, когда не поступают команды
+    /* Motor timeout stop timer. If no commands are received
+       in specific time, motors will be stopped for security
+       reasons
+
        SYSCLOCK = 72 MHz
        TIMEOUT = 300ms
        Prescaler = 72
        Interval =  10'000
-       T = 72 Mhz / 72 / 10'000 = 100 Hz
-    
-       Таймер крутится с частотой 100Гц, каждый тик уменьшает счетичк на 1.
-       Когда счетчик станет равным 0 - выкл двигатели. 
-       Соответственно, 1 ед счетчика - 10 мс
-    
+       T = 72 Mhz / 72 / 10'000 = 100 Hz    
     */
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
     
@@ -57,24 +54,25 @@ void TIM3_IRQHandler()
         timeout_counter--;
         if(timeout_counter<0)
         {
+            // Stop motors
             timeout_counter = MOTORS_STOP_TIMEOUT;
             Motors_Control(0, 0);
             GPIOC->ODR^=GPIO_Pin_13;
         }
-        
     }
 }
 
 int main()
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
-	Gpio_Init(GPIOC, GPIO_Pin_13, GPIO_Mode_Out_OD, GPIO_Speed_50MHz);	    
-    timeout_counter=0;
+	Gpio_Init(GPIOC, GPIO_Pin_13, GPIO_Mode_Out_OD, GPIO_Speed_50MHz);
+
+    timeout_counter = 0;
     stopTimerInit();    
     Uart_Init(USART_BAUD, UartHandler);
-    Motors_Init();	
+    Motors_Init();
+
 	while(1);
-    
+
 	return 0;
 }
-	

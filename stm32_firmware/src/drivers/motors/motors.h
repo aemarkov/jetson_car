@@ -10,12 +10,12 @@ void L_Motor_SetDirection(bool a, bool b);
 void R_Motor_SetDirection(bool a, bool b);
 
 /**
-    \brief Управляет скоростью и направлением вращения моторов
-    <0 - назад
-     0 - GND-стоп
-    >0 - вперед
-    \param[in] left Скорость левого двигателя [-128; 127]
-    \param[in] right Скорость правого двигателя [-128; 127]
+    \brief Control motor speed and direction
+    <0 - backward
+     0 - GND-stop
+    >0 - forward
+    \param[in] left  Left motor speed [-128; 127]
+    \param[in] right Right motor speed [-128; 127]
 */
 void Motors_Control(int8_t left, int8_t right);
 
