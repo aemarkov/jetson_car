@@ -9,7 +9,7 @@ from jetson_car.msg import MotorsControl
 from sensor_msgs.msg import Joy
 
 WTF_MAX_PWM = 127    # Absoutly max value
-MAX_PWM = None       # user-set value (< WTF_MAX_PWM)
+MAX_PWM = 50         # user-set value (< WTF_MAX_PWM)
 IS_LOOP = None
 
 motors_control_pub = None
@@ -46,7 +46,7 @@ def joy_cmd_callback(msg):
 if __name__ == '__main__':
     rospy.init_node('joy_to_motors')
     
-    MAX_PWM = rospy.get_param('~max_pwm', 15)    
+    MAX_PWM = rospy.get_param('~max_pwm', MAX_PWM)
     IS_LOOP = rospy.get_param('~is_loop', False)
     rospy.loginfo("MAX_PWM:   %d", MAX_PWM)
     rospy.loginfo("IS_LOOP:   %d", IS_LOOP)
