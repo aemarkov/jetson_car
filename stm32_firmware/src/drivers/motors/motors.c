@@ -6,6 +6,9 @@
 #include <config.h>
 #include <stdio.h>
 
+#define MOTOR_MIN               0
+#define MOTOR_MAX               3600
+
 void Motors_Init(void)
 {   
     RCC_APB2PeriphClockCmd(
@@ -30,25 +33,20 @@ void Motors_Init(void)
     // Setup PWM
     /*
         SYSCLOCK = 72 MHz
-        PWM - 100 Hz
-        Tpwm = 1/PWM = 10 ms
+        PWM - 20 kHz
+        Tpwm = 1/PWM = 50 uS
         
-        F = 72 MHz / 72 = 1000 kHz
-        T = 1/F =  1 us
-        Period = Tpwm / T = 10000
-        
-        Pulse min = 1000 
-        Pulse max = 2000
-		
-		1*10^-6 * 10^3
+        F = 72 MHz
+        T = 1/f = ...
+        Period = Tpwm / T = 3600
     */
     
     TIM_TimeBaseInitTypeDef motorTimerInit;    
     TIM_TimeBaseStructInit(&motorTimerInit);
     motorTimerInit.TIM_ClockDivision = TIM_CKD_DIV1;
     motorTimerInit.TIM_CounterMode = TIM_CounterMode_Up;
-    motorTimerInit.TIM_Prescaler = 72;
-    motorTimerInit.TIM_Period = 10000;
+    motorTimerInit.TIM_Prescaler = 1 - 1; // Prescaler is "TIM_Prescaler - 1"
+    motorTimerInit.TIM_Period = MOTOR_MAX;
     TIM_TimeBaseInit(TIM2, &motorTimerInit);
     
     
@@ -95,15 +93,15 @@ void R_Motor_SetDirection(bool a, bool b)
 }
 
 // Control left motor PWM duty cycle
-void L_Motor_SetPWM(int8_t pwm)
+void L_Motor_SetPWM(uint8_t pwm)
 {
-    TIM2->CCR2 = pwm * MOTOR_MAX / 127;
+    TIM2->CCR2 = (uint32_t)pwm * MOTOR_MAX / 127U;
 }
 
 // Control right motor PWM duty cycle
-void R_Motor_SetPWM(int8_t pwm)
+void R_Motor_SetPWM(uint8_t pwm)
 {
-    TIM2->CCR1 = pwm * MOTOR_MAX / 127;
+    TIM2->CCR1 = (uint32_t)pwm * MOTOR_MAX / 127U;
 }
 
 void Motors_Control(int8_t left, int8_t right)

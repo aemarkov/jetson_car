@@ -22,7 +22,4 @@
 #define L_MOTOR_PWM_PIN         GPIO_Pin_1
 #define R_MOTOR_PWM_PIN         GPIO_Pin_0
 
-#define MOTOR_MIN               0
-#define MOTOR_MAX               20000
-
 #endif
