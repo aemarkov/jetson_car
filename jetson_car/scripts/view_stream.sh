@@ -6,12 +6,12 @@ while getopts ":hp:" opt
 do
 case $opt in
 h)
-	echo "./view_stream.sh [-p <port>]"
-	echo "View stream from NVIdia Jetson CSI-camera"
-	echo "    -port Streaming port, default $PORT"
-	exit 0
-	;;
-p)	POPT=$OPTARG ;;
+    echo "./view_stream.sh [-p <port>]"
+    echo "View stream from NVIdia Jetson CSI-camera"
+    echo "    -port Streaming port, default $PORT"
+    exit 0
+    ;;
+p)    POPT=$OPTARG ;;
 *)  echo "Invalid argument" ;;
 esac
 done

@@ -64,15 +64,15 @@ void TIM3_IRQHandler()
 
 int main()
 {
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
-	Gpio_Init(GPIOC, GPIO_Pin_13, GPIO_Mode_Out_OD, GPIO_Speed_50MHz);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+    Gpio_Init(GPIOC, GPIO_Pin_13, GPIO_Mode_Out_OD, GPIO_Speed_50MHz);
 
     timeout_counter = 0;
     stopTimerInit();
     Uart_Init(USART_BAUD, UartHandler);
     Motors_Init();
 
-	while(1);
+    while(1);
 
-	return 0;
+    return 0;
 }

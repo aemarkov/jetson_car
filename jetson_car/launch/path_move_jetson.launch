@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!--
-	Path moving with obstacle avoidance. Quintic polinoms + LiDAR
-	Jetson side:
-		- Path publishing
-		- Logging in frund format
+    Path moving with obstacle avoidance. Quintic polinoms + LiDAR
+    Jetson side:
+        - Path publishing
+        - Logging in frund format
         - SLAM, obstacle detection, motion planning, control
 -->
 <launch>

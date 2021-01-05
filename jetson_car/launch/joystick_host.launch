@@ -6,9 +6,9 @@
         - GStreamer stream viewer
 -->
 <launch>
-	<arg name="dev" default="/dev/input/js0"/>
-	<arg name="is_stream" default="false"/>
+    <arg name="dev" default="/dev/input/js0"/>
+    <arg name="is_stream" default="false"/>
     <param name="dev" value="$(arg dev)"/>
-	<node name="joystick" pkg="joy" type="joy_node"/>
-	<node name="stream_viewer" pkg="jetson_car" type="view_stream.sh" if="$(eval is_stream == true)"/>
+    <node name="joystick" pkg="joy" type="joy_node"/>
+    <node name="stream_viewer" pkg="jetson_car" type="view_stream.sh" if="$(eval is_stream == true)"/>
 </launch>

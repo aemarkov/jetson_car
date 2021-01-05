@@ -37,10 +37,10 @@ void Uart_Init(int baud, CommandHandler handler)
     _bufferCnt = 0;
     memset(_buffer, 0, sizeof(_buffer));
 
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA |
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA |
                            RCC_APB2Periph_USART1,
                            ENABLE);
-	
+    
     // Setup USART pins
     Gpio_Init(GPIOA, USART_TX, GPIO_Mode_AF_PP, GPIO_Speed_50MHz);
     Gpio_Init(GPIOA, USART_RX, GPIO_Mode_IN_FLOATING, GPIO_Speed_50MHz);
@@ -78,7 +78,7 @@ void USART1_IRQHandler()
 
         if(_state == 0)
         {
-			// Receiving header
+            // Receiving header
             if(byte == _header[_headerCnt])
             {
                 _headerCnt++;

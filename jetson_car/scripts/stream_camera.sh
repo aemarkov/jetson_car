@@ -7,26 +7,26 @@ while getopts ":hi:p:b:" opt
 do
 case $opt in
 h)
-	echo "./stream-camera.sh -i <ip> [-p <port> -b <baud>]"
-	echo "Streams video from NVidia Jetson CSI-camera"
-	echo "    -ip    client(!) ip address"
-	echo "    -port  Streaming port, default $PORT"
-	echo "    -baud  Baud rate in kb/s, default $BAUD"
-	exit 0
-	;;
-i)	IP=$OPTARG ;;
-p)	PORT=$OPTARG ;;
-b)	BAUD=$OPTARG ;;
+    echo "./stream-camera.sh -i <ip> [-p <port> -b <baud>]"
+    echo "Streams video from NVidia Jetson CSI-camera"
+    echo "    -ip    client(!) ip address"
+    echo "    -port  Streaming port, default $PORT"
+    echo "    -baud  Baud rate in kb/s, default $BAUD"
+    exit 0
+    ;;
+i)    IP=$OPTARG ;;
+p)    PORT=$OPTARG ;;
+b)    BAUD=$OPTARG ;;
 *)
-	echo "Invalid argument" ;;
+    echo "Invalid argument" ;;
 esac
 done
 
 if [ -z $IP ]
 then
-	echo "Client IP address not set"
-	echo "Use ./stream-camera -h to view help"
-	exit 1
+    echo "Client IP address not set"
+    echo "Use ./stream-camera -h to view help"
+    exit 1
 fi
 
 echo "Starting streaming to $IP:$PORT with baudrate $BAUD"

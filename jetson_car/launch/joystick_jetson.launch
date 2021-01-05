@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <!--
-	Launch jetson_car with manual control via joystick with FPV
-	Jetson side:
-		- motors control
-		- vide streaming from Jetson TX Kit camera
+    Launch jetson_car with manual control via joystick with FPV
+    Jetson side:
+        - motors control
+        - vide streaming from Jetson TX Kit camera
 -->
 <launch>
-	<arg name="max_pwm" default="25"/>                       <!-- max motor PWM-->
-	<arg name="is_stream" default="false"/>                  <!-- enable camera streaming -->
-	<arg name="control_pc" if="$(eval is_stream == true)"/>  <!-- stream viewer PC hostname/IP -->
+    <arg name="max_pwm" default="25"/>                       <!-- max motor PWM-->
+    <arg name="is_stream" default="false"/>                  <!-- enable camera streaming -->
+    <arg name="control_pc" if="$(eval is_stream == true)"/>  <!-- stream viewer PC hostname/IP -->
 
-	<node name="motors_driver" pkg="jetson_car" type="motors_driver_node" output="screen"/>
-	<node name="joy_to_motors" pkg="jetson_car" type="joy_to_motors_node.py" output="screen">
-		<param name="max_pwm" value="$(arg max_pwm)"/>
-		<param name="is_loop" value="true"/>
-	</node>
-	<node name="camera_streamer" pkg="jetson_car" type="stream_camera.sh" args="-i $(arg control_pc)" if="$(eval is_stream == true)"/>
+    <node name="motors_driver" pkg="jetson_car" type="motors_driver_node" output="screen"/>
+    <node name="joy_to_motors" pkg="jetson_car" type="joy_to_motors_node.py" output="screen">
+        <param name="max_pwm" value="$(arg max_pwm)"/>
+        <param name="is_loop" value="true"/>
+    </node>
+    <node name="camera_streamer" pkg="jetson_car" type="stream_camera.sh" args="-i $(arg control_pc)" if="$(eval is_stream == true)"/>
 </launch>
