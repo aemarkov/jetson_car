@@ -1,4 +1,10 @@
 <?xml version="1.0"?>
+<!--
+    Launch jetson_car with manual control via joystick with FPV
+    Host side:
+        - jostic publishing
+        - GStreamer stream viewer
+-->
 <launch>
 	<arg name="dev" default="/dev/input/js0"/>
 	<arg name="is_stream" default="false"/>

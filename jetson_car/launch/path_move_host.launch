@@ -1,9 +1,16 @@
 <?xml version="1.0"?>
+<!--
+	Path moving with obstacle avoidance. Quintic polinoms + LiDAR
+	Host side:
+		- Visualization
+		- Path drowing/publishing
+		- Logging in frund format
+-->
 <launch>
 	<!-- path publishing -->
 	<arg name="is_draw_path" default="False"/>
 	<arg name="path_directory" default="$(find jetson_car)/logs"/>
-	<arg name="path_file" default=""/>	
+	<arg name="path_file" default=""/>
 	<!-- logging -->
 	<arg name="is_publish_path" default="false"/>
 	<arg name="is_log_path" default="false"/>
@@ -15,7 +22,7 @@
     <include file="$(find jetson_car)/launch/include/_logger.launch" if="$(eval arg('is_publish_path') or arg('is_log_path'))">
     	<arg name="is_publish_path" value="$(arg is_publish_path)"/>
     	<arg name="is_log_path" value="$(arg is_log_path)"/>
-    	<arg name="logs_directory" value="$(arg logs_directory)"/>	
+    	<arg name="logs_directory" value="$(arg logs_directory)"/>
     </include>
 
 	<node name="path_publisher" pkg="jetson_car" type="path_drawer_node.py" output="screen" if="$(eval is_draw_path and path_file=='')">

@@ -1,23 +1,17 @@
 <?xml version="1.0"?>
+<!--
+	Launch jetson_car with manual control via joystick with FPV
+	Jetson side:
+		- motors control
+		- vide streaming from Jetson TX Kit camera
+-->
 <launch>
-	<arg name="max_pwm" default="25"/>
-    <arg name="is_stream" default="false"/>
-	<arg name="control_pc" if="$(eval is_stream == true)"/>
-	<arg name="is_record_odom" default="false"/>
-	<arg name="is_record_velodyne" default="false"/>
-	<arg name="bags_directory" value="/home/nvidia/bags"/>
+	<arg name="max_pwm" default="25"/>                       <!-- max motor PWM-->
+	<arg name="is_stream" default="false"/>                  <!-- enable camera streaming -->
+	<arg name="control_pc" if="$(eval is_stream == true)"/>  <!-- stream viewer PC hostname/IP -->
 
-	<!-- ZED-camera SLAM -->
-    <include file="$(find zed_wrapper)/launch/zed.launch" if="$(eval is_record_odom)"/>
-    <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch" if="$(eval is_record_velodyne)"/>
-    <node name="bag_record" pkg="rosbag" type="record"
-    	  args="record -o $(arg bags_directory)/bag /rosout /tf /zed/odom /zed/pose /zed/path_map /velodyne_points" 
-    	  if="$(eval is_record_velodyne or is_record_odom)"/>
-   	<node pkg="tf" type="static_transform_publisher" name="zed_to_gps"  args="0 0 0 -1.57 0 0 zed_camera_center velodyne 10"
-   		  if="$(eval is_record_velodyne)"/>
-
-	<node name="motors_driver" pkg="jetson_car" type="motors_driver_node" output="screen"/>    
-	<node name="joy_to_motors" pkg="jetson_car" type="joy_to_motors_node.py" output="screen">    
+	<node name="motors_driver" pkg="jetson_car" type="motors_driver_node" output="screen"/>
+	<node name="joy_to_motors" pkg="jetson_car" type="joy_to_motors_node.py" output="screen">
 		<param name="max_pwm" value="$(arg max_pwm)"/>
 		<param name="is_loop" value="true"/>
 	</node>

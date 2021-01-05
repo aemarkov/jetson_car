@@ -3,14 +3,9 @@
     <arg name="logs_directory" default="$(find jetson_car)/logs"/>
     <arg name="is_log_gps" default="true"/>
     <arg name="is_log_path" default="true"/>
-    <arg name="svo_recording" default="false"/>
-    <arg name="svo_recording_path" default="$(find jetson_car)/svo"/>
 
     <group ns="zed">
-        <include file="$(find zed_wrapper)/launch/zed_camera.launch">
-            <arg name="svo_recording" value="$(arg svo_recording)"/>
-            <arg name="svo_recording_path" value="$(arg svo_recording_path)"/>
-        </include>
+        <include file="$(find zed_wrapper)/launch/zed_camera.launch"/>
     </group>
     <include file="$(find jetson_car)/launch/include/_gps_converter.launch" if="$(arg is_log_gps)"/>
     <include file="$(find jetson_car)/launch/include/_logger.launch">
