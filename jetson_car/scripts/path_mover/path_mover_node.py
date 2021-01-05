@@ -36,7 +36,7 @@ def __vec_of_angle(angle):
     return __rot_vector(np.array([1,0]), angle)
 
 # Вычисляет угол отклонения между текущим курсом и пересечением
-def calc_bearing(pos, orientation, intersect):  
+def calc_bearing(pos, orientation, intersect):
     vec_to_intersect =  intersect - pos
     orientation_vec = __vec_of_angle(orientation)
     bearing = math.atan2(np.cross(orientation_vec, vec_to_intersect), np.dot(vec_to_intersect, orientation_vec))
@@ -63,7 +63,7 @@ def find_closest_point_index(path, position):
 
     return min_index
 
-# Находит точку на пути, расположенную впереди (по траектории) заданной, 
+# Находит точку на пути, расположенную впереди (по траектории) заданной,
 # не ближе, чем радиус
 def find_ahead_point(path, position, radius):
     index0 = find_closest_point_index(path, position)
@@ -105,14 +105,14 @@ def pose_callback(msg):
 
     # отрисова окружности поиска для оладки
     rviz.circle(position, RADIUS)
-    
+
     # Отрисовка пересечений
     rviz.intersection(position, path.poses[index].pose.position)
 
     if index >= len(path.poses)-1:
         rospy.loginfo("End of the path")
         send_command(0,0)
-        return    
+        return
 
     # управленияе взависимости от угла отклонения текущего
     # курса от курса на пересечение
@@ -131,7 +131,7 @@ if __name__ == '__main__':
     rospy.init_node('path_move')
     rospy.loginfo('path_move started')
 
-    RADIUS = rospy.get_param('~radius', RADIUS)    
+    RADIUS = rospy.get_param('~radius', RADIUS)
     P_COEF = rospy.get_param('~P_COEF', P_COEF)
 
     rospy.loginfo('RADIUS: %f', RADIUS)
@@ -141,5 +141,5 @@ if __name__ == '__main__':
     rospy.Subscriber('/local_path', Path, path_callback)
     rospy.Subscriber('/zed/pose', PoseStamped, pose_callback)
     rviz = RvizHelpers('/circle', '/intersect')
-    
+
     rospy.spin()

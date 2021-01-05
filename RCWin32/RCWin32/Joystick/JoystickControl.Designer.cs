@@ -2,12 +2,12 @@
 {
     partial class JoystickControl
     {
-        /// <summary> 
+        /// <summary>
         /// Обязательная переменная конструктора.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Освободить все используемые ресурсы.
         /// </summary>
         /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
@@ -22,8 +22,8 @@
 
         #region Код, автоматически созданный конструктором компонентов
 
-        /// <summary> 
-        /// Требуемый метод для поддержки конструктора — не изменяйте 
+        /// <summary>
+        /// Требуемый метод для поддержки конструктора — не изменяйте
         /// содержимое этого метода с помощью редактора кода.
         /// </summary>
         private void InitializeComponent()
@@ -44,10 +44,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numJoysticId)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // gboxKeyboard
-            // 
-            this.gboxKeyboard.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.gboxKeyboard.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gboxKeyboard.Controls.Add(this.label4);
             this.gboxKeyboard.Location = new System.Drawing.Point(6, 48);
@@ -56,20 +56,20 @@
             this.gboxKeyboard.TabIndex = 13;
             this.gboxKeyboard.TabStop = false;
             this.gboxKeyboard.Text = "Keyboard";
-            // 
+            //
             // label4
-            // 
+            //
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(6, 16);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(145, 13);
             this.label4.TabIndex = 0;
             this.label4.Text = "Use WSAD to control the car";
-            // 
+            //
             // joystickDrawer
-            // 
-            this.joystickDrawer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.joystickDrawer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.joystickDrawer.Location = new System.Drawing.Point(6, 142);
             this.joystickDrawer.Name = "joystickDrawer";
@@ -80,9 +80,9 @@
             this.joystickDrawer.Throttle = 0F;
             this.joystickDrawer.X = 0F;
             this.joystickDrawer.Y = 0F;
-            // 
+            //
             // btnKeyboard
-            // 
+            //
             this.btnKeyboard.Location = new System.Drawing.Point(115, 19);
             this.btnKeyboard.Name = "btnKeyboard";
             this.btnKeyboard.Size = new System.Drawing.Size(106, 23);
@@ -90,9 +90,9 @@
             this.btnKeyboard.Text = "Keyboard";
             this.btnKeyboard.UseVisualStyleBackColor = true;
             this.btnKeyboard.Click += new System.EventHandler(this.btnKeyboard_Click);
-            // 
+            //
             // btnJoystick
-            // 
+            //
             this.btnJoystick.Location = new System.Drawing.Point(6, 19);
             this.btnJoystick.Name = "btnJoystick";
             this.btnJoystick.Size = new System.Drawing.Size(104, 23);
@@ -100,10 +100,10 @@
             this.btnJoystick.Text = "Joystick";
             this.btnJoystick.UseVisualStyleBackColor = true;
             this.btnJoystick.Click += new System.EventHandler(this.btnJoystick_Click);
-            // 
+            //
             // gboxJoystick
-            // 
-            this.gboxJoystick.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.gboxJoystick.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gboxJoystick.Controls.Add(this.numJoysticId);
             this.gboxJoystick.Controls.Add(this.label3);
@@ -113,35 +113,35 @@
             this.gboxJoystick.TabIndex = 9;
             this.gboxJoystick.TabStop = false;
             this.gboxJoystick.Text = "Joystick";
-            // 
+            //
             // numJoysticId
-            // 
-            this.numJoysticId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.numJoysticId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numJoysticId.Location = new System.Drawing.Point(6, 42);
             this.numJoysticId.Name = "numJoysticId";
             this.numJoysticId.Size = new System.Drawing.Size(201, 20);
             this.numJoysticId.TabIndex = 5;
             this.numJoysticId.ValueChanged += new System.EventHandler(this.numJoysticId_ValueChanged);
-            // 
+            //
             // label3
-            // 
+            //
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(6, 26);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(201, 13);
             this.label3.TabIndex = 4;
             this.label3.Text = "ID (Sorry, can\'t enumerate. Try 0 for start)";
-            // 
+            //
             // joystickUpdateTimer
-            // 
+            //
             this.joystickUpdateTimer.Interval = 10;
             this.joystickUpdateTimer.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
+            //
             // groupBox1
-            // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.gboxJoystick);
             this.groupBox1.Controls.Add(this.gboxKeyboard);
@@ -154,9 +154,9 @@
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Control";
-            // 
+            //
             // JoystickControl
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox1);

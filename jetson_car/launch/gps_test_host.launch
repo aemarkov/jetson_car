@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<launch>    
+<launch>
     <include file="$(find mapviz)/launch/mapviz.launch"/>
     <node name="rviz" pkg="rviz" type="rviz"/>
 </launch>

@@ -78,13 +78,13 @@ bool RANSACSegmentation::calculate(pcl::PointCloud<pcl::PointXYZ>::ConstPtr clou
             if(point.z > 0)
                 indexes_cnt[row * cols + col]++;
         //}
-    }    
+    }
 
     for(int i = 0; i<rows*cols; i++)
     {
         if(indexes_cnt[i]>=CNT_THRESHOLD)
             grid.data[i] = OBSTACLE_VALUE;
-    }    
+    }
 
     // Fill occupancy grid with obstacles
     /*for(int i = 0; i<cloud->points.size(); i++)

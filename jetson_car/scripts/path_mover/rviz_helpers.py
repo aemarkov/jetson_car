@@ -9,11 +9,11 @@ import msg_helpers
 class RvizHelpers:
     def __init__(self, circle_topic, intersect_topic):
         self.circle_pub = rospy.Publisher(circle_topic, Marker, queue_size = 1)
-        self.intersect_pub = rospy.Publisher(intersect_topic, Marker, queue_size = 1)   
-        
+        self.intersect_pub = rospy.Publisher(intersect_topic, Marker, queue_size = 1)
+
         self.circle_marker = self.__init_marker(Marker.LINE_STRIP, (0, 0, 1, 1))
         self.intersect_marker = self.__init_marker(Marker.LINE_LIST, (1, 1, 0, 1))
-        
+
 
     def __init_marker(self, marker_type, rgba):
         marker = Marker()
@@ -47,6 +47,6 @@ class RvizHelpers:
         self.intersect_marker.points = []
         #for intersection in intersections:
         self.intersect_marker.points.append(position)
-        self.intersect_marker.points.append(intersection)    
+        self.intersect_marker.points.append(intersection)
         self.intersect_pub.publish(self.intersect_marker)
 

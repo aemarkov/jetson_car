@@ -13,7 +13,7 @@ Protocol:
 | HEADER | LEFT | RIGHT |
 |--------|------|-------|
              1b     1b
-             
+
 Calls callback when command is received
 */
 
@@ -36,8 +36,8 @@ void Uart_Init(int baud, CommandHandler handler)
     _headerCnt = 0;
     _bufferCnt = 0;
     memset(_buffer, 0, sizeof(_buffer));
-    
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | 
+
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA |
                            RCC_APB2Periph_USART1,
                            ENABLE);
 	
@@ -66,15 +66,15 @@ void Uart_Init(int baud, CommandHandler handler)
     init.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&init);
 
-    USART_ITConfig(CMD_USART, USART_IT_RXNE, ENABLE); 
+    USART_ITConfig(CMD_USART, USART_IT_RXNE, ENABLE);
 }
 
 void USART1_IRQHandler()
-{   
+{
     if(USART_GetITStatus(CMD_USART, USART_IT_RXNE)!=RESET)
     {
         USART_ClearITPendingBit(CMD_USART, USART_IT_RXNE);
-        uint8_t byte = USART_ReceiveData(CMD_USART);              
+        uint8_t byte = USART_ReceiveData(CMD_USART);
 
         if(_state == 0)
         {
@@ -89,14 +89,14 @@ void USART1_IRQHandler()
             {
                 _headerCnt = 0;
             }
-            
+
         }
         else if(_state == 1)
         {
             // Receiving payload
             _buffer[_bufferCnt] = byte;
             _bufferCnt++;
-            
+
             // Data received
             if(_bufferCnt >= CMD_SIZE)
             {

@@ -28,7 +28,7 @@ namespace RCWin32
             _sender = new UdpSender();
 
             joystickControl.Focus();
-        }        
+        }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
@@ -69,6 +69,6 @@ namespace RCWin32
                 return;
 
             _sender.SetRemote(txtHost.Text, Int32.Parse(txtPort.Text));
-        }        
+        }
     }
 }

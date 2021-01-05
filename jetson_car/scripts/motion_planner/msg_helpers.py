@@ -5,7 +5,7 @@ def quaterion_to_array(q):
     return np.array([q.x, q.y, q.z, q.w])
 
 def point_to_array(p):
-    return np.array([p.x, p.y])    
+    return np.array([p.x, p.y])
 
 def path_poses_to_array(poses):
     arr = np.zeros((len(poses), 2))

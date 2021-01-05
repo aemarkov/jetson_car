@@ -38,7 +38,7 @@ def create_interactive_marker():
     control.always_visible = True
     control.orientation_mode = InteractiveMarkerControl.VIEW_FACING
     control.interaction_mode = InteractiveMarkerControl.MOVE_PLANE
-    control.independent_marker_orientation = True    
+    control.independent_marker_orientation = True
     #control.interaction_mode = InteractiveMarkerControl.MENU
     #control.name="draw_path_menu";
     control.markers.append(create_marker())
@@ -51,7 +51,7 @@ def get_filename():
     return filename
 
 def marker_cb(feedback):
-    p = feedback.pose.position    
+    p = feedback.pose.position
     pose = PoseStamped()
     pose.pose.position = p
     path.poses.append(pose)
@@ -74,7 +74,7 @@ if __name__=="__main__":
         path_directory = rospy.get_param('path_directory')
         if not os.path.exists(path_directory):
             os.makedirs(path_directory)
-        
+
         filename = os.path.join(path_directory, get_filename())
         path_file = open(filename, 'w')
         path_file.write('X\tY\n')

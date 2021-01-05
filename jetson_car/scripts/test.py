@@ -13,13 +13,13 @@ if __name__ == '__main__':
     pwm = 60
     tmax = 3
     cmd.left = pwm
-    cmd.right = pwm    
+    cmd.right = pwm
 
     rate = rospy.Rate(10)
     t0 = rospy.get_time()
     while not rospy.is_shutdown():
         t = rospy.get_time() - t0
-        print(t)        
+        print(t)
         motors_control_pub.publish(cmd)
         rate.sleep()
         if t >= tmax:

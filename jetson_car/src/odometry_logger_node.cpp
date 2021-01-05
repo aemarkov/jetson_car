@@ -22,7 +22,7 @@ bool   is_publish_path;                     // Публиковать ли тр�
 bool   is_directory_set;                    // Параметр директории для логов указан
 string logs_directory;                      // Выходная папка
 
-const string pos_topic = "/zed/pose";       // Имя топика положения 
+const string pos_topic = "/zed/pose";       // Имя топика положения
 const string path_topic = "/real_path";     // Имя топика траектории
 const string gps_topic  = "/odometry/gps";  // Имя топика с GPS в том же фрейме, что и path_topic
 
@@ -77,7 +77,7 @@ int main(int argc, char** argv)
         ROS_INFO_STREAM("Trajectory log file:     " << trajectory_file_name);
         ROS_INFO_STREAM("GPS Trajectory log file: " << gps_trajectory_file_name);
         ROS_INFO_STREAM("Full log file:           " << full_log_file_name);
-        
+
         // Заголовки файлов
         trajectory_file << "X\tY" << endl;
         full_log_file << "t\tX\tY\tZ\tYaw\tPitch\tRoll\tQ.x\tQ.y\tQ.z\tQ.w" << endl;
@@ -104,18 +104,18 @@ int main(int argc, char** argv)
     if(is_publish_path)
         path_pub = nh.advertise<nav_msgs::Path>(path_topic, 1);
 
-    t0 = ros::Time::now();   
+    t0 = ros::Time::now();
 
     ros::spin();
 }
 
 void read_params(const ros::NodeHandle& nh)
-{       
+{
     //note - this is private, so nh(~)
     nh.param<bool>("is_publish_path", is_publish_path, false);
     nh.param<bool>("is_log_gps", is_log_gps, false);
     nh.param<bool>("is_log_path", is_log_path, false);
-    is_directory_set = nh.getParam("logs_directory", logs_directory);    
+    is_directory_set = nh.getParam("logs_directory", logs_directory);
 }
 
 string get_filename(const string& directory, const string& suffix)
@@ -137,8 +137,8 @@ bool create_directory_if_not_exists(const string& path)
     {
         ROS_ERROR_STREAM("Error creating directory. Error code: " << errno);
         return false;
-    }    
-    
+    }
+
     return true;
 }
 
@@ -152,7 +152,7 @@ void pos_cb(const geometry_msgs::PoseStamped& msg)
     }
 
     if(is_log_path)
-    {          
+    {
         double t = (ros::Time::now() - t0).toSec();
 
         auto pos = msg.pose.position;
@@ -176,7 +176,7 @@ void pos_cb(const geometry_msgs::PoseStamped& msg)
 void gps_cb(const nav_msgs::Odometry& msg)
 {
     if(!is_log_gps)
-        return;    
+        return;
 
     auto pos = msg.pose.pose.position;
     gps_file << pos.x << "\t" << pos.y << endl;

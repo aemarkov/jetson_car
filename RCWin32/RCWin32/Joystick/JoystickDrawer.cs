@@ -43,7 +43,7 @@ namespace RCWin32.Joystick
 
             DrawThrottle(e.Graphics, Throttle);
             DrawRot(e.Graphics, Rot);
-            DrawXY(e.Graphics, X, Y);            
+            DrawXY(e.Graphics, X, Y);
         }
 
         private void DrawThrottle(Graphics g, float throttle)
@@ -65,7 +65,7 @@ namespace RCWin32.Joystick
             float center = PADDING + fullWidth / 2;
             float x = center + fullWidthFix * rot;
 
-            g.DrawRectangle(_pen, PADDING, Height - PADDING - BAR_WIDTH, fullWidth, BAR_WIDTH);            
+            g.DrawRectangle(_pen, PADDING, Height - PADDING - BAR_WIDTH, fullWidth, BAR_WIDTH);
             g.FillRectangle(_brush, x - ROT_POINTER_WIDTH / 2, Height - PADDING - BAR_WIDTH, ROT_POINTER_WIDTH, BAR_WIDTH);
         }
 
@@ -92,5 +92,5 @@ namespace RCWin32.Joystick
             if (value > 0.5) return 0.5f;
             return value;
         }
-    }    
+    }
 }

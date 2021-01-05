@@ -11,7 +11,7 @@ from geometry_msgs.msg import PointStamped
 class Buffer:
     def __init__(self, window, data_size):
         self._buffer = np.zeros((window, data_size))
-        self._i = 0        
+        self._i = 0
 
     def add(self, value):
         self._buffer[self._i] = value
@@ -45,7 +45,7 @@ def odom_callback(msg):
         dx, dy = buffer.median()
         publish(dx, dy, msg.header.stamp, speed_filtered_pub)
 
-    p1 = msg    
+    p1 = msg
 
 if __name__ == '__main__':
     rospy.init_node('path_move')

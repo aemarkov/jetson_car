@@ -13,7 +13,7 @@
  * 2019-11-18	1.1.3		Roberto D'Amico	Close #5 correct indication of East direction
  * 2019-11-12   1.1.2       Roberto D'Amico Removed Fix #4 incorrectly introduced and restored operation with touch devices
  * 2019-11-12   1.1.1       Roberto D'Amico Fixed Issue #4 - Now JoyStick work in any position in the page, not only at 0,0
- * 
+ *
  * The MIT License (MIT)
  *
  *  This file is part of the JoyStick Project (https://github.com/bobboteck/JoyStick).
@@ -25,7 +25,7 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -37,7 +37,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
+
 /**
  * @desc Principal object that draw a joystick, you only need to initialize the object and suggest the HTML container
  * @costructor
@@ -152,7 +152,7 @@ var JoyStick = (function(container, parameters)
 	/**
 	 * @desc Events for manage touch
 	 */
-	function onTouchStart(event) 
+	function onTouchStart(event)
 	{
 		pressed = 1;
 	}
@@ -182,9 +182,9 @@ var JoyStick = (function(container, parameters)
 			drawExternal();
 			drawInternal();
 		}
-	} 
+	}
 
-	function onTouchEnd(event) 
+	function onTouchEnd(event)
 	{
 		pressed = 0;
 		// If required reset position store variable
@@ -204,12 +204,12 @@ var JoyStick = (function(container, parameters)
 	/**
 	 * @desc Events for manage mouse
 	 */
-	function onMouseDown(event) 
+	function onMouseDown(event)
 	{
 		pressed = 1;
 	}
 
-	function onMouseMove(event) 
+	function onMouseMove(event)
 	{
 		if(pressed === 1)
 		{
@@ -234,7 +234,7 @@ var JoyStick = (function(container, parameters)
 		}
 	}
 
-	function onMouseUp(event) 
+	function onMouseUp(event)
 	{
 		pressed = 0;
 		// If required reset position store variable
@@ -257,9 +257,9 @@ var JoyStick = (function(container, parameters)
 	
 	/**
 	 * @desc The width of canvas
-	 * @return Number of pixel width 
+	 * @return Number of pixel width
 	 */
-	this.GetWidth = function () 
+	this.GetWidth = function ()
 	{
 		return canvas.width;
 	};
@@ -268,7 +268,7 @@ var JoyStick = (function(container, parameters)
 	 * @desc The height of canvas
 	 * @return Number of pixel height
 	 */
-	this.GetHeight = function () 
+	this.GetHeight = function ()
 	{
 		return canvas.height;
 	};
@@ -335,7 +335,7 @@ var JoyStick = (function(container, parameters)
 		if(orizontal < directionHorizontalLimitNeg)
 		{
 			if(result === "C")
-			{ 
+			{
 				result = "W";
 			}
 			else
@@ -346,7 +346,7 @@ var JoyStick = (function(container, parameters)
 		if(orizontal > directionHorizontalLimitPos)
 		{
 			if(result === "C")
-			{ 
+			{
 				result = "E";
 			}
 			else

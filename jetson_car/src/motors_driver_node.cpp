@@ -2,7 +2,7 @@
 	This node is a motors driver for jetson_car.
 	It subscribes to raw control commands topic
 	with pwm commands for left and right motors and
-	send them in correct format to the STM32 via UART 
+	send them in correct format to the STM32 via UART
 */
 
 #include <ros/ros.h>

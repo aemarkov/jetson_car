@@ -5,7 +5,7 @@ import math
 import sys
 import numpy as np
 import rospy
-import tf 
+import tf
 from geometry_msgs.msg import Point, Pose, PointStamped, PoseStamped
 from nav_msgs.msg import OccupancyGrid, Path
 
@@ -78,9 +78,9 @@ def find_closest_point_index(path, position, start_index = 0):
 
     return min_index
 
-# Get the part of the path from start index and certain length 
+# Get the part of the path from start index and certain length
 def get_subpath(path, start_index, length):
-    s = 0 
+    s = 0
     i = start_index
 
     while i < len(path.poses)-1 and s < length:
@@ -94,7 +94,7 @@ def get_subpath(path, start_index, length):
     if i >= len(path.poses):
         return path.poses[start_index:]
 
-    return path.poses[start_index:i+1] # include right 
+    return path.poses[start_index:i+1] # include right
 
 # Combine lateral ang longtitudial trajectories
 # For now lon trajectory is just central line, so combine
@@ -108,7 +108,7 @@ def combine_trajectory(trajectory):
 # Integrate jerk (d3y/dx^3) for a given trajectory
 def integrate_jerk(trajectory):
     J = 0
-    for i in range(trajectory.len()-1):        
+    for i in range(trajectory.len()-1):
         dj = (trajectory.ddy[i+1]-trajectory.ddy[i])/(trajectory.x[i+1]-trajectory.x[i])
         J += dj*dj
 
@@ -117,14 +117,14 @@ def integrate_jerk(trajectory):
 # Get value of the grid's cell in the certain point
 # point in world frame
 def get_grid_value(grid, point):
-    
+
     # Transform from world frame to the grid frame
     point_stamped = PointStamped()
     point_stamped.header.stamp = rospy.Time(0)
     point_stamped.header.frame_id = WORLD_FRAME
     point_stamped.point = point
     point_grid = listener.transformPoint(OCCUPANCY_GRID_FRAME, point_stamped)
-    
+
     # Get cell
     row = int(point_grid.point.y / grid.info.resolution)
     col = int(point_grid.point.x / grid.info.resolution)
@@ -144,15 +144,15 @@ def check_path_clear(grid, trajectory):
 
 def draw_road(np_subpath):
     n = 50
-    fp_c = np.zeros((n, 2)) 
-    fp_min = np.zeros((n, 2)) 
-    fp_max = np.zeros((n, 2)) 
+    fp_c = np.zeros((n, 2))
+    fp_min = np.zeros((n, 2))
+    fp_max = np.zeros((n, 2))
     for i, s in enumerate(np.linspace(0, HORIZONT, n)):
         fp_min[i] = [s, D_MIN]
         fp_c[i] = [s, 0]
         fp_max[i] = [s, D_MAX]
 
-    
+
     fp_min = frenet.path_to_global(fp_min, np_subpath)
     fp_c = frenet.path_to_global(fp_c, np_subpath)
     fp_max = frenet.path_to_global(fp_max, np_subpath)
@@ -161,17 +161,17 @@ def draw_road(np_subpath):
 
 def plan_path():
     if grid == None or pose == None or reference_path == None:
-        return 
+        return
 
     start_index = find_closest_point_index(reference_path, pose.pose.position)
     subpath = get_subpath(reference_path, start_index, HORIZONT)
     np_subpath = msg_helpers.path_poses_to_array(subpath)
 
-    # Convert current position to Frenet Frame    
+    # Convert current position to Frenet Frame
     orientation =  tf.transformations.euler_from_quaternion(msg_helpers.quaterion_to_array(pose.pose.orientation))[2]
     pos = msg_helpers.point_to_array(pose.pose.position)
     speed = vec_of_angle(orientation)
-    frenet_frame = frenet.FrenetFrame(0, np_subpath[0], np_subpath[1]) 
+    frenet_frame = frenet.FrenetFrame(0, np_subpath[0], np_subpath[1])
     pos_frenet = frenet_frame.point_to(pos)
     speed_frenet = frenet_frame.vector_to(speed)
 
@@ -197,7 +197,7 @@ def plan_path():
             if not check_path_clear(grid, global_trajectory):
                 continue
 
-            Cd = Kj*integrate_jerk(lat_trajectory) + Kt*lat_trajectory.x[-1] + Kd*lat_trajectory.y[-1]**2            
+            Cd = Kj*integrate_jerk(lat_trajectory) + Kt*lat_trajectory.x[-1] + Kd*lat_trajectory.y[-1]**2
             if Cd < min_cd:
                 optimal_trajectory = global_trajectory
                 min_cd = Cd
@@ -206,7 +206,7 @@ def plan_path():
     trajectories_helper.lines(trajectories)
 
     local_path = Path()
-    local_path.header.frame_id = WORLD_FRAME    
+    local_path.header.frame_id = WORLD_FRAME
 
     if optimal_trajectory is not None:
         optimal_trajectory_helper.lines([optimal_trajectory])
@@ -243,7 +243,7 @@ if __name__ == '__main__':
     trajectories_helper = LinesHelper('/trajectories', [0.7,0.7,0.7,0.4])
     optimal_trajectory_helper = LinesHelper('/optimal_trajectory', [1, 0, 0,1])
 
-    #rospy.spin()    
+    #rospy.spin()
     rate = rospy.Rate(1.0 / REPLANE_PERIOD)
     while not rospy.is_shutdown():
         plan_path()

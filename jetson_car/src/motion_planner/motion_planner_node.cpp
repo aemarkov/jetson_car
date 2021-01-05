@@ -324,8 +324,8 @@ void plan_path()
 
     if(!obstacle.has_in && !obstacle.has_out)
     {
-        ROS_INFO("No obstacle");  
-        //ROS_INFO_STREAM(obstacle.closest_point << " " << obstacle.out_index);      
+        ROS_INFO("No obstacle");
+        //ROS_INFO_STREAM(obstacle.closest_point << " " << obstacle.out_index);
 
         for(int i = obstacle.closest_point; i<=obstacle.out_index; i++)
             path.poses.push_back(reference_path->poses[i]);
@@ -335,12 +335,12 @@ void plan_path()
         ROS_WARN("No path");
     }
     else
-    {        
+    {
         //auto p = reference_path->poses[obstacle.closest_point].pose.position;
         //ROS_INFO("3");
         GridCoord p_coord;
         if(grid_point_to_cell(*grid, world_point_to_grid(*grid, pose->pose.position).point, p_coord))
-        { 
+        {
             //ROS_INFO("4");
             std::vector<geometry_msgs::PoseStamped> sub_path;
             if(a_star(*grid, p_coord, obstacle.out_coord, sub_path))
@@ -413,7 +413,7 @@ ObstacleOnPath find_obstacle(const nav_msgs::Path& path, const geometry_msgs::Po
 
         if(find_in && pnext_value > 0)
         {
-            find_in = false;            
+            find_in = false;
             obstacle.has_in = true;
         }
         else if(!find_in && p_value <= 0)

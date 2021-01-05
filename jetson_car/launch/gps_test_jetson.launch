@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<launch>    
+<launch>
     <arg name="logs_directory" default="$(find jetson_car)/logs"/>
     <arg name="is_log_gps" default="true"/>
     <arg name="is_log_path" default="true"/>
@@ -12,6 +12,6 @@
         <arg name="is_publish_path" value="false"/>
         <arg name="is_log_path" value="$(arg is_log_path)"/>
         <arg name="is_log_gps" value="$(arg is_log_gps)"/>
-        <arg name="logs_directory" value="$(arg logs_directory)"/>   
-    </include>    
+        <arg name="logs_directory" value="$(arg logs_directory)"/>
+    </include>
 </launch>

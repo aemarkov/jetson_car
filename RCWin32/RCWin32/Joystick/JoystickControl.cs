@@ -21,7 +21,7 @@ namespace RCWin32.Joystick
         };
 
         Joystick _joystick;
-        KeyboardJoystick _keyboardJoystick;        
+        KeyboardJoystick _keyboardJoystick;
         Mode _mode;
 
         public JoystickControl()
@@ -71,7 +71,7 @@ namespace RCWin32.Joystick
             var cmd = _joystick.Read();
             JoystickMoved?.Invoke(this, cmd);
             DrawJoystick(cmd);
-        }       
+        }
 
         private void DrawJoystick(JoystickInfo info)
         {
@@ -106,5 +106,5 @@ namespace RCWin32.Joystick
                 DrawJoystick(cmd);
             }
         }
-    }    
+    }
 }

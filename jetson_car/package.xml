@@ -4,7 +4,7 @@
   <version>0.0.0</version>
   <description>NVidia Jetson controlled car</description>
 
-  
+
   <maintainer email="markovalex95@gmail.com">Markov Alexey</maintainer>
   <license>TODO</license>
 
@@ -57,10 +57,10 @@
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>message_runtime</exec_depend>
   <exec_depend>message_runtime</exec_depend>
-  <exec_depend>gstreamer1.0</exec_depend>  
+  <exec_depend>gstreamer1.0</exec_depend>
   <exec_depend>gstreamer1.0-plugins-base</exec_depend>
   <exec_depend>gstreamer1.0-plugins-good</exec_depend>
-  <exec_depend>gstreamer1.0-plugins-bad</exec_depend>  
+  <exec_depend>gstreamer1.0-plugins-bad</exec_depend>
   <exec_depend>gstreamer1.0-tools</exec_depend>
 
 

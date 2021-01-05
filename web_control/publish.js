@@ -29,7 +29,7 @@ function connect_ros(url) {
     const ros = new ROSLIB.Ros({
         url: url
     });
-    
+
     ros.on('connection', function () {
         console.log('Connected to websocket server.');
         const topic = new ROSLIB.Topic({
@@ -41,12 +41,12 @@ function connect_ros(url) {
         console.log('Start publishing')
         display_status('Connected')
     });
-    
+
     ros.on('error', function (error) {
         console.log('Error connecting to websocket server: ', error);
         display_status('No connection')
     });
-    
+
     ros.on('close', function () {
         console.log('Connection to websocket server closed.');
         if (publish_handler !== undefined) {
@@ -55,5 +55,5 @@ function connect_ros(url) {
             display_status('No connection')
         }
     });
-    
+
 }

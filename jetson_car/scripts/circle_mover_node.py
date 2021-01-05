@@ -25,10 +25,10 @@ def send_command(forward, rot):
     cmd.right = forward + rot
 
     if abs(cmd.left) > 127:
-        cmd.left = math.copysign(127, cmd.left) 
+        cmd.left = math.copysign(127, cmd.left)
 
     if abs(cmd.right) > 127:
-        cmd.right = math.copysign(127, cmd.right) 
+        cmd.right = math.copysign(127, cmd.right)
 
     print cmd.left, cmd.right
     motors_control_pub.publish(cmd)
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     while True:
         #angle = r / (2 * math.pi * R)
         #speed = b
-        
+
         #if abs(speed < min_v):
         #    speed = math.copysign(min_v, speed)
 
@@ -56,9 +56,9 @@ if __name__ == '__main__':
 
         #speed = b
         #if dt < 1:
-        #    angle = 0            
+        #    angle = 0
         #elif dt < 2:
-        #    angle = omega            
+        #    angle = omega
         #elif dt < 3:
         #    angle = 0
         #else:
@@ -73,6 +73,6 @@ if __name__ == '__main__':
     cmd = MotorsControl()
     cmd.left = 0
     cmd.right = 0
-    motors_control_pub.publish(cmd)    
+    motors_control_pub.publish(cmd)
 
 

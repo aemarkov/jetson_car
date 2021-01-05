@@ -28,7 +28,7 @@ def create_cmd(msg):
 
     left  =  forward * MAX_PWM
     right =  forward * MAX_PWM
-    left  += rot * MAX_PWM 
+    left  += rot * MAX_PWM
     right -= rot * MAX_PWM
 
     cmd = MotorsControl()
@@ -45,7 +45,7 @@ def joy_cmd_callback(msg):
 
 if __name__ == '__main__':
     rospy.init_node('joy_to_motors')
-    
+
     MAX_PWM = rospy.get_param('~max_pwm', MAX_PWM)
     IS_LOOP = rospy.get_param('~is_loop', False)
     rospy.loginfo("MAX_PWM:   %d", MAX_PWM)
@@ -53,11 +53,11 @@ if __name__ == '__main__':
 
     rospy.Subscriber('joy', Joy, joy_cmd_callback)
     motors_control_pub = rospy.Publisher('motors_commands', MotorsControl, queue_size=100)
-    
+
     if IS_LOOP:
         rate = rospy.Rate(10)
         while not rospy.is_shutdown():
-            motors_control_pub.publish(global_cmd)            
+            motors_control_pub.publish(global_cmd)
             rate.sleep()
     else:
         rospy.spin()

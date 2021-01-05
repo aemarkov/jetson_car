@@ -35,7 +35,7 @@ int main(int argc, char** argv)
     private_nh.param<float>("cell_size", cell_size, 0.25);
     private_nh.param<float>("distance_threshold", distance_threshold, 0.1);
     private_nh.param<int>("cnt_threshold", cnt_threshold, 5);
-    private_nh.param<float>("safe_radius", safe_radius, 0.5);    
+    private_nh.param<float>("safe_radius", safe_radius, 0.5);
 
     ROS_INFO("Mapper node started");
     ROS_INFO_STREAM("cell_size:          " << cell_size);

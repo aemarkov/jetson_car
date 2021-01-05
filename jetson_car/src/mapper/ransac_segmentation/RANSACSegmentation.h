@@ -23,8 +23,8 @@
 
 /**
  * \brief Find obstacles in point cloud using RANSAC plane segmentation
- * 
- * Find ground plane using RANSAC, everything is not plane is obstacles. 
+ *
+ * Find ground plane using RANSAC, everything is not plane is obstacles.
  * Represent cloud as nav_msgs::OccupancyGrid
  */
 class RANSACSegmentation
@@ -49,7 +49,7 @@ public:
 
 private:
 
-    const float CELL_SIZE;                           ///< OccupancyGrid cell size in meters 
+    const float CELL_SIZE;                           ///< OccupancyGrid cell size in meters
     const float DISTANCE_THRESHOLD;                  ///< RANSAC distance threshold
     const uint8_t SAFE_RADIUS;                       ///< Radius around obstacles marked as dangerous
     const int CNT_THRESHOLD;
