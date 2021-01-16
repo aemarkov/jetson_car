@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
+<!-- 
+    Play recorded ZED and rosbag to check ZED SLAM with GPS
+    Display path with MapViz
+-->
 <launch>
+    <include file="$(find jetson_car)/launch/include/_gps_converter.launch"/>
     <include file="$(find mapviz)/launch/mapviz.launch"/>
-    <node name="rviz" pkg="rviz" type="rviz"/>
+    <!--<node name="rviz" pkg="rviz" type="rviz"/>-->
 </launch>

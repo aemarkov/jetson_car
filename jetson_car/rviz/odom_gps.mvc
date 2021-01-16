@@ -1,5 +1,5 @@
 capture_directory: ~
-fixed_frame: far_field
+fixed_frame: map
 target_frame: <none>
 fix_orientation: false
 rotate_90: false

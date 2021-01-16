@@ -17,6 +17,8 @@ Note: IMU yaw = 0 is EAST. Set yaw_offset otherwise
         <param name="broadcast_utm_transform" value="true"/>
         <param name="publish_filtered_gps" value="true"/>
         <param name="use_odometry_yaw" value="false"/>
+        <param name="wait_for_datum" value="true"/>
+        <param name="datum" value="48.819004, 44.624105, 0.0"/>
 
         <remap from="imu/data" to="android/imu" />
         <remap from="gps/fix" to="android/gps" />

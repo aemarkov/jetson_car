@@ -1,17 +1,10 @@
 <?xml version="1.0"?>
+<!-- Play recorded ZED and rosbag to check ZED SLAM with GPS -->
 <launch>
-    <arg name="logs_directory" default="$(find jetson_car)/logs"/>
-    <arg name="is_log_gps" default="true"/>
-    <arg name="is_log_path" default="true"/>
-
-    <group ns="zed">
-        <include file="$(find zed_wrapper)/launch/zed_camera.launch"/>
-    </group>
-    <include file="$(find jetson_car)/launch/include/_gps_converter.launch" if="$(arg is_log_gps)"/>
-    <include file="$(find jetson_car)/launch/include/_logger.launch">
-        <arg name="is_publish_path" value="false"/>
-        <arg name="is_log_path" value="$(arg is_log_path)"/>
-        <arg name="is_log_gps" value="$(arg is_log_gps)"/>
-        <arg name="logs_directory" value="$(arg logs_directory)"/>
+    <arg name="svo_file"/> <!-- ZED record -->
+    <arg name="bag_file"/> <!-- Other ROS topics record (including GPS) -->
+    <include file="$(find zed_wrapper)/launch/zed.launch">
+        <arg name="svo_file" value="$(arg svo_file)"/>
     </include>
+    <node name="play" pkg="rosbag" type="play" args="$(arg bag_file)"/>
 </launch>
