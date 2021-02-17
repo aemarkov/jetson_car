@@ -28,12 +28,15 @@ def create_cmd(msg):
 
     left  =  forward * MAX_PWM
     right =  forward * MAX_PWM
-    left  += rot * MAX_PWM
-    right -= rot * MAX_PWM
+    left  -= rot * MAX_PWM
+    right += rot * MAX_PWM
 
     cmd = MotorsControl()
     cmd.left = trim(left)
     cmd.right = trim(right)
+    rospy.loginfo('left: %d, right: %d', cmd.left, cmd.right)
+    # Workaround for motor polarity
+    cmd.right = -cmd.right
     return cmd
 
 def joy_cmd_callback(msg):

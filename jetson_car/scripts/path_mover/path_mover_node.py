@@ -67,16 +67,19 @@ def find_closest_point_index(path, position):
 # не ближе, чем радиус
 def find_ahead_point(path, position, radius):
     index0 = find_closest_point_index(path, position)
+    # rospy.loginfo('index0=%d', index0)
     index = index0
     r2 = radius**2
 
     while index < len(path.poses):
         dist = (path.poses[index].pose.position.x - position.x)**2 + (path.poses[index].pose.position.y - position.y)**2
         if dist >= r2:
-            return (index0, path.poses[index].pose.position)
+            # rospy.loginfo('index=%d, radius2=%f, pose=%s', index, dist, path.poses[index].pose.position)
+            return (index, path.poses[index].pose.position)
 
         index+=1
-
+    # rospy.logwarn("Can't find point on path")
+    # rospy.loginfo('index=%d, pose=%s', path.poses[-1].pose.position)
     return (index0, path.poses[-1].pose.position)
 
 # получение требуемой траектории
@@ -121,6 +124,8 @@ def pose_callback(msg):
 
     if abs(rot) > 1:
         rot = math.copysign(1, rot)
+
+    rospy.loginfo('bearing=%f, rot=%f', bearing / math.pi * 180, rot)
 
     send_command(1, rot)
 

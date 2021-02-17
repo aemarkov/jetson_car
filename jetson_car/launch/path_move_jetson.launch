@@ -7,7 +7,9 @@
         - SLAM, obstacle detection, motion planning, control
 -->
 <launch>
-    <arg name="max_pwm" default="15"/>
+    <arg name="max_pwm" default="30"/>
+    <arg name="p_gain" default="1"/>
+    <arg name="radius" default="0.3"/>
     <arg name="run_now" default="true"/>
     <arg name="path_file" default=""/>
     <arg name="obstacles" default="false"/>
@@ -40,8 +42,8 @@
 
     <!-- The main node - move along the path -->
     <node name="path_mover" pkg="jetson_car" type="path_mover_node.py" if="$(arg run_now)" output="screen">
-        <param name="p_coef" value="3"/>
-        <param name="radius" value="0.3"/>
+        <param name="p_gain" value="$(arg p_gain)"/>
+        <param name="radius" value="$(arg radius)"/>
         <remap from="local_path" to="reference_path" unless="$(arg obstacles)"/>
     </node>
 
