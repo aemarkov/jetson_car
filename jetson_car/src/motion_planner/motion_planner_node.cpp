@@ -105,7 +105,7 @@ int main(int argc, char** argv)
     listener = std::make_unique<tf::TransformListener>(nh);
     auto grid_sub = nh.subscribe<nav_msgs::OccupancyGrid>("/occupancy_grid", 1, grid_callback);
     //auto goal_sub = nh.subscribe<geometry_msgs::PoseStamped>("goal", 1, goal_callback);
-    auto pose_sub = nh.subscribe<geometry_msgs::PoseStamped>("/zed/pose", 1, pose_callback);
+    auto pose_sub = nh.subscribe<geometry_msgs::PoseStamped>("/zed/zed_node/pose", 1, pose_callback);
     auto path_sub = nh.subscribe<nav_msgs::Path>("/reference_path", 1, path_callback);
     path_pub = nh.advertise<nav_msgs::Path>("/local_path", 1);
 

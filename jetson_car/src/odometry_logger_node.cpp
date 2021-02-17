@@ -22,7 +22,7 @@ bool   is_publish_path;                     // Публиковать ли тр�
 bool   is_directory_set;                    // Параметр директории для логов указан
 string logs_directory;                      // Выходная папка
 
-const string pos_topic = "/zed/pose";       // Имя топика положения
+const string pos_topic = "/zed/zed_node/pose";// Имя топика положения
 const string path_topic = "/real_path";     // Имя топика траектории
 const string gps_topic  = "/odometry/gps";  // Имя топика с GPS в том же фрейме, что и path_topic
 

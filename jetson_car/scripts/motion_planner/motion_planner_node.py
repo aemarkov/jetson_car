@@ -235,7 +235,7 @@ if __name__ == '__main__':
 
     listener = tf.TransformListener()
     rospy.Subscriber('/occupancy_grid', OccupancyGrid, grid_callback)
-    rospy.Subscriber('/zed/pose', PoseStamped, pose_callback)
+    rospy.Subscriber('/zed/zed_node/pose', PoseStamped, pose_callback)
     rospy.Subscriber('/reference_path', Path, path_callback)
     path_pub = rospy.Publisher('/local_path', Path, queue_size=1, latch=True)
 

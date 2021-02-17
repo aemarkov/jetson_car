@@ -130,7 +130,7 @@ Visualization Manager:
       Shaft Length: 0.100000001
       Shaft Radius: 0.0500000007
       Shape: Arrow
-      Topic: /zed/pose
+      Topic: /zed/zed_node/pose
       Unreliable: false
       Value: true
     - Class: rviz/InteractiveMarkers

@@ -139,7 +139,7 @@ if __name__ == '__main__':
 
     commands_pub = rospy.Publisher('joy', Joy, queue_size = 100)
     rospy.Subscriber('/local_path', Path, path_callback)
-    rospy.Subscriber('/zed/pose', PoseStamped, pose_callback)
+    rospy.Subscriber('/zed/zed_node/pose', PoseStamped, pose_callback)
     rviz = RvizHelpers('/circle', '/intersect')
 
     rospy.spin()

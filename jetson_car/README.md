@@ -43,7 +43,7 @@
  - Перепубликовывает получаемую одометрию в виде `nav_msgs/Path`, чтобы красиво отображать в RViz. **[УСТАРЕЛО]** zed-wrapper сам прекрасно умеет это делать
 
 Принимаемые топики:
-- `/zed/pose` ([geometry_msgs/PoseStamped](http://docs.ros.org/lunar/api/geometry_msgs/html/msg/PoseStamped.html)) - одометрия
+- `/zed/zed_node/pose` ([geometry_msgs/PoseStamped](http://docs.ros.org/lunar/api/geometry_msgs/html/msg/PoseStamped.html)) - одометрия
 - `/odometry/gps` ([nav_msgs/Odometry](http://docs.ros.org/melodic/api/nav_msgs/html/msg/Odometry.html)) - положение по GPS в той же С.К., что и одометрия от SLAM
 
 Публикуемые топики:
