@@ -71,7 +71,7 @@ if __name__=="__main__":
     rospy.loginfo('path_drawer_node started')
 
     if rospy.has_param('~path_directory'):
-        path_directory = rospy.get_param('path_directory')
+        path_directory = rospy.get_param('~path_directory')
         if not os.path.exists(path_directory):
             os.makedirs(path_directory)
 
