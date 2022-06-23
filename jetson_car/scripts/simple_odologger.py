@@ -49,10 +49,10 @@ def do_log(f, ff, timestamp, pose):
 def log_zed(data):
     do_log(zed_f, zed_f_full, data.header.stamp, data.pose)
     try:
-        pos, qrot = listener.lookupTransform('/map', '/base_link', rospy.Time(0))
+        pos, qrot = listener.lookupTransform('/base_link_lidar', '/map', rospy.Time(0)) #listener.getLatestCommonTime('/base_link', '/map')) 
         pose = Pose(Point(*pos), Quaternion(*qrot))
         do_log(lidar_f, lidar_f_full, data.header.stamp, pose)
-    except(LookupException):
+    except(tf.LookupException, tf.ExtrapolationException):
         pass
 
 
@@ -60,8 +60,8 @@ if __name__ == '__main__':
     rospy.init_node('simple_odologger')
 
     note = ''
-    if len(sys.argv) > 1:
-        note = sys.argv[1]
+    #if len(sys.argv) > 1:
+    #    note = sys.argv[1]
 
     zed_f, zed_f_full = open_logs(ts, 'zed', note)
     lidar_f, lidar_f_full = open_logs(ts, 'lidar', note)
