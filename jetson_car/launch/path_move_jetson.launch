@@ -41,7 +41,8 @@
     <node name="planner" pkg="jetson_car" type="motion_planner_node.py" output="screen" if="$(arg obstacles)"/>
 
     <!-- The main node - move along the path -->
-    <node name="path_mover" pkg="jetson_car" type="path_mover_node.py" if="$(arg run_now)" output="screen">
+    <node name="path_mover" pkg="jetson_car" type="path_mover_node.py"  output="screen">
+	<param name="run_now" value="$(arg run_now)"/>
         <param name="p_gain" value="$(arg p_gain)"/>
         <param name="radius" value="$(arg radius)"/>
         <remap from="local_path" to="reference_path" unless="$(arg obstacles)"/>

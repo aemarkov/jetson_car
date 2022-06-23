@@ -9,6 +9,7 @@ import rospy
 from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
 from sensor_msgs.msg import Joy
+from std_srvs.srv import Empty
 from tf.transformations import euler_from_quaternion
 
 import msg_helpers
@@ -130,6 +131,11 @@ def pose_callback(msg):
     send_command(1, rot)
 
 
+def start(*args, **kwargs):
+    rospy.loginfo('Start')
+    rospy.Subscriber('/zed/zed_node/pose', PoseStamped, pose_callback)
+
+
 #########################################################
 
 if __name__ == '__main__':
@@ -138,13 +144,17 @@ if __name__ == '__main__':
 
     RADIUS = rospy.get_param('~radius', RADIUS)
     P_COEF = rospy.get_param('~P_COEF', P_COEF)
+    run_now = rospy.get_param('~run_now', False)
 
     rospy.loginfo('RADIUS: %f', RADIUS)
     rospy.loginfo('P_COEF: %f', P_COEF)
 
     commands_pub = rospy.Publisher('joy', Joy, queue_size = 100)
     rospy.Subscriber('/local_path', Path, path_callback)
-    rospy.Subscriber('/zed/zed_node/pose', PoseStamped, pose_callback)
+    if run_now:
+        start()
+    else:
+        rospy.Service('run_car', Empty, start)
     rviz = RvizHelpers('/circle', '/intersect')
 
     rospy.spin()
